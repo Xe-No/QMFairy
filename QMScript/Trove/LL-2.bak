@@ -1,0 +1,44 @@
+[General]
+SyntaxVersion=2
+BeginHotkey=121
+BeginHotkeyMod=0
+PauseHotkey=0
+PauseHotkeyMod=0
+StopHotkey=123
+StopHotkeyMod=0
+RunOnce=1
+EnableWindow=
+MacroID=4e9c518d-4d55-49c5-b170-82b2a75f2378
+Description=LL:Q11111_自动备份
+Enable=0
+AutoRun=0
+[Repeat]
+Type=0
+Number=1
+[SetupUI]
+Type=2
+QUI=
+[Relative]
+SetupOCXFile=
+[Comment]
+
+[Script]
+Hwnd = Plugin.Window.MousePoint()
+Set dm = createobject("dm.dmsoft") 
+
+
+Do
+dm.WaitKey 115, 0
+Call Combo1
+Loop
+
+Sub Combo1
+Plugin.Bkgnd.KeyPress Hwnd, 81
+Delay 700
+
+For 5
+Plugin.Bkgnd.KeyPress Hwnd, 49 
+Delay 1400
+Next
+
+End Sub

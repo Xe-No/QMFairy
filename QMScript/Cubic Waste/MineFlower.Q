@@ -1,0 +1,101 @@
+[General]
+SyntaxVersion=2
+BeginHotkey=121
+BeginHotkeyMod=0
+PauseHotkey=0
+PauseHotkeyMod=0
+StopHotkey=123
+StopHotkeyMod=0
+RunOnce=1
+EnableWindow=
+MacroID=665a5347-20a2-4a2f-88de-2948f1ece891
+Description=MineFlower
+Enable=0
+AutoRun=0
+[Repeat]
+Type=0
+Number=1
+[SetupUI]
+Type=2
+QUI=
+[Relative]
+SetupOCXFile=
+[Comment]
+
+[Script]
+Amp = 1
+//ReapArray = Array(106,109,111,112,233,298)
+vertical_bias = 0  //点击时的纵向偏移
+ReapArray = Array(116,141,142,143,144)
+//End
+Call Lib.CC.Initailize()
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.SetCamera(-180,89)
+
+
+BlockCount = 0
+
+For TarY = 0 To SizeY - 2
+	For TarX = 0  To SizeX - 1
+		Call Mine_Up_Down(TarX,TarY)
+	Next
+	
+Next
+
+
+
+Function InArray(ele, TarArray)
+	For Each TarI In TarArray
+		If TarI - ele = 0 Then 
+			InArray = 1
+			Goto hell
+			Else 
+			InArray = 0
+		End If
+	Next
+	Rem hell
+End Function
+
+
+Sub OnScriptExit
+	MessageBox BlockCount
+End Sub
+
+Function Mine_Up_Down(target_x, target_y)
+Dim get_ore, sweep_z, land_z
+
+get_ore = False
+		For sweep_z = 50 To SizeZ - 1
+			
+			If InArray(Lib.CC.ReadBlock(target_x, target_y, sweep_z), ReapArray) = 1 Then 
+				get_ore = True
+				Delay 200*Amp
+				BlockCount = BlockCount + 1
+				Call Lib.CC.WriteBlock(target_x, target_y, sweep_z - 1, 0)
+				
+				Rem Grab	
+				Call Lib.CC.TPT(target_x, target_y + 0.2, sweep_z)
+				Delay 400
+				
+				CCount = 0
+				Call Plugin.Bkgnd.LeftClick(handle, 640, 480 + vertical_bias)
+				While InArray(Lib.CC.ReadBlock(target_x, target_y, sweep_z), ReapArray) = 1
+					CCount = CCount + 1
+					Delay 100
+					If CCount > 30 Then 
+						Goto Grab
+					End If
+				Wend
+				Delay 200*Amp
+				
+			End If
+			
+		Next
+		If get_ore Then
+			land_z = 40
+			While Lib.CC.ReadBlock(target_x, target_y + 1, land_z) = 0 And land_z - SizeZ  < 0
+				land_z = land_z + 1
+			Wend
+			返回值 = Lib.CC.TPT(target_x, target_y + 1, land_z - 1 )
+		End If
+End Function

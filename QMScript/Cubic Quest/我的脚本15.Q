@@ -1,0 +1,84 @@
+[General]
+SyntaxVersion=2
+BeginHotkey=121
+BeginHotkeyMod=0
+PauseHotkey=0
+PauseHotkeyMod=0
+StopHotkey=123
+StopHotkeyMod=0
+RunOnce=1
+EnableWindow=
+MacroID=935cb68d-5490-4e4f-9065-e45def4d3a3e
+Description=alts quest new 1
+Enable=0
+AutoRun=0
+[Repeat]
+Type=0
+Number=1
+[SetupUI]
+Type=2
+QUI=
+[Relative]
+SetupOCXFile=
+[Comment]
+
+[Script]
+//小号任务状态写入测试
+
+UserVar Kernel_Number = 1 "核心编号"
+UserVar Kernel_Max = 4 "核心总数"
+
+
+Call Lib.CC.Initailize()
+Call dm.SetWindowText(hwnd, "Kernel: " & Kernel_Number & "/" & Kernel_Max ) 
+IsBind = dm.BindWindow(handle, "dx2", "dx2", "dx", 0)
+Delay 500
+Dm.SetPath "C:\Users\Administrator\Documents\DmRes"'大漠全局路径设置
+dm.WriteFile  "ScriptLog\" &  "Alts.txt",   "[" & Date & "]" & "Start Log" & vbCrLf
+
+
+//初始化窗口
+fooX1 = 100
+fooY1 = 400
+foobar = dm.CreateFoobarCustom(handle, fooX1, fooY1, "UI2.bmp", "FF00FF", 1.0)
+////////////////////
+Call Lib.CM.SendInfo("Script Initialized", 1)
+
+If IsBind = 1 Then 
+	TracePrint IsBind
+	Call Lib.CM.SendInfo("Window Binded", 1)
+End If
+	
+Dim index	
+acc_index = Kernel_Number
+
+
+Do
+Call ActivateAccount(acc_index)
+acc_index = acc_index + Kernel_Max
+TracePrint acc_index
+Loop
+
+
+
+Function ActivateAccount(index)
+
+path = "C:\Users\Administrator\Documents\DmRes\AltsState.log"
+
+incar = Lib.文件.读取指定行文本内容(path, index)
+incar = Split(incar, "|")
+alt_name = incar(0)
+alt_password = incar(1)
+
+
+If alt_name = "" Then 
+	ExitScript
+End If
+
+
+result = Lib.CM.ActivateQuest(alt_name, alt_password)
+
+TracePrint result
+
+
+End Function

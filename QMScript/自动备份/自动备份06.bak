@@ -1,210 +1,976 @@
 [General]
 SyntaxVersion=2
-BeginHotkey=121
-BeginHotkeyMod=0
-PauseHotkey=0
-PauseHotkeyMod=0
-StopHotkey=123
-StopHotkeyMod=0
-RunOnce=1
-EnableWindow=
-MacroID=d3d15286-59d4-43bd-895d-08d6434630ee
-Description=Clan Farm 上层
-Enable=1
-AutoRun=0
-[Repeat]
-Type=0
-Number=1
-[SetupUI]
-Type=2
-QUI=
-[Relative]
-SetupOCXFile=
+MacroID=f6ae5bd1-b251-4b0c-b4c9-1d8cd6e27843
 [Comment]
 
 [Script]
-//Configuration
 
 
+Sub Initailize
+	Set dm = createobject("dm.dmsoft")  //创建对象
+	handle = Plugin.Window.MousePoint	//获取鼠标指向窗口的句柄
+	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F29BC]+874", 0)//获取地图区域基址
+	dm.SetPath "C:\Users\Administrator\Documents\DmRes"'大漠全局路径设置
+End Sub
 
-UserVar ReapCases=DropList{"Yumberries":1|"Cotton":2|"All":3|"Rubber&Cotton":4}=2 "收获类型"
+Sub GetSubAddress
 
-UserVar TeleWait = 50 "检测-传送间隔(ms) 建议:30-100"
-TeleWait2 = 100 //"传送-点击间隔(ms) 建议:30-100"
-UserVar GrabWait = 50 "收获完成-再传送间隔(ms) 正常状态建议:400 5x建议:50-150"
+	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F29BC]+874", 0)
+	
+End Sub
 
-//ReapArray = Array(238, 241, 243, 245, 247, 251) //All
-//ReapArray = Array(238)  //Yumberry
-  //Cotton,Rubber
-Select Case ReapCases
-	Case 1
-		ReapArray = Array(238)
-	Case 2
-		ReapArray = Array(247)
-	Case 3
-		ReapArray = Array(238, 241, 243, 245, 247, 251)
-	Case 4
-		ReapArray = Array(247, 251)
-End Select
+Function GetAccState(name)
 
-max_entity = 250
+//判断账号状态
+//0 正常
+//1 无效
+Dim ban_list
+ban_list = dm.ReadFile("ban_list.txt")
+ban_list = Split(ban_list, vbcrLf)
+//MessageBox ban_list(1)
+For Each name_b in ban_list
+	If name_b = name Then 
+		//MessageBox name_b
+		GetAccState = 1
+		Exit Function
+	End If
+Next
+
+GetAccState = 0	
+	
+End Function
 
 
-//Configuration End
+Sub GetWorldSize  //需要: handle, SubAddress   返回: SizeX, SizeY, SizeZ
+	SizeZ = 1
+	SizeY = 1
+	SizeX = 1
+	Do While Plugin.Memory.Read8Bit(handle, SubAddress + 20*SizeZ + 6) - SizeZ =0
+		SizeZ = SizeZ + 1
+	Loop
+	Do While Plugin.Memory.Read8Bit(handle, SubAddress + 20*SizeZ*SizeY + 4) - SizeY = 0
+		SizeY = SizeY + 1
+	Loop
+	Do While Plugin.Memory.Read8Bit(handle, SubAddress + 20*SizeZ*SizeY*SizeX + 2) - SizeX = 0 
+		SizeX = SizeX + 1
+	Loop
+End Sub
 
-//Script Start
-Call Lib.CC.Initailize()
+
+Sub GetCharPos    //??
+	CharX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24")
+	CharY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28")
+	CharZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C")
+End Sub
+
+
+Function SetCharPos(TPX, TPY, TPZ)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+End Function
+
+Sub GetCharPosInt    //??
+	CharX = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24"))
+	CharY = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28"))
+	CharZ = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C"))
+End Sub
+
+Function GetEntityPos(Index)
+	EntityX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+24")
+	EntityY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+28")
+	EntityZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+2C")
+	EntityX2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+34")
+	EntityY2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+38")
+	EntityZ2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+3C")
+End Function
+
+Function GetEntityID(index)
+	EntityID   = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F2", 1)
+	EntityType = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F0", 2)
+	EntityNum  = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F4", 1)
+End Function
+
+Function SetEntityPos(Index, Target_X, Target_Y, Target_Z)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+24", Target_X)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+28", Target_Y)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+2C", Target_Z)
+End Function
+
+Sub GetFocuPos   //??
+	FocuX = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+984")
+	FocuY = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+988")
+	FocuZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+98C")
+End Sub
+
+Sub GetCamPos
+	CamX = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+990")
+	CamY = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+994")
+	CamZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+998")
+End Sub
+
+Sub GetCamera    //??
+	Azimu = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+97C"))
+	Polar = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+980"))
+End Sub
+
+Sub DrawCharPos   //??
+	CharX = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24"))
+	CharY = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28"))
+	CharZ = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C"))
+	dm_ret = dm.FoobarFillRect(foobar, 4*CharX , 4*CharY, 4*CharX+4 , 4*CharY + 4, "FF0000")
+	
+End Sub
+
+Function BindClick(ClickX, ClickY)
+		dm.MoveTo ClickX, ClickY
+		dm.LeftClick 
+End Function
+
+Function SetCamera(Azimu, Polar)
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F29BC]+97C", Azimu)
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F29BC]+980", Polar)
+End Function
+
+Function TPT(TPX, TPY, TPZ)
+
+	Dim bx, by, bz
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetFocuPos()
+	bx = CharX - FocuX
+	by = CharY - FocuY
+	bz = CharZ - FocuZ
+	
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+
+	Do
+		Call Lib.CC.GetCharPos()
+		Call Lib.CC.GetFocuPos()
+		Delay 50
+		TracePrint Abs(CharX - FocuX - bx) + Abs(CharY - FocuY - by) + Abs(CharZ - FocuZ - bz)
+	Loop While Abs(CharX - FocuX - bx) + Abs(CharY - FocuY - by) + Abs(CharZ - FocuZ - bz) > 0.1 
+End Function
+
+Function TPEx(TPX, TPY, TPZ)//This function based on TP, but require Z equals, too.
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+	Dim cam_x, cam_y, cam_z, count
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	count = 0
+	Do
+		cam_x = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+984")
+		cam_y = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+988")
+		cam_z = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+98C")
+		count = count + 1
+		Delay 20
+	Loop While Abs(cam_x - TPX) + Abs(cam_y - TPY) + Abs(cam_z - TPZ) > 0.1 And count < 30
+End Function
+
+Function TP(TPX, TPY, TPZ)
+
+	
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+
+	Delay 100
+End Function
+
+Function TPP(TPX, TPY, TPZ)
+
+	
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	dm_ret = WriteBlock( round(TPX) , round(TPY), round(TPZ + 1 ), 350  )
+
+	Delay 100
+End Function
+
+
+//函数
+
+Function ReadBlock(BloX, BloY, BloZ)//需要： handle, SubAddres
+	Dim add
+	add = SubAddress + (((BloX * SizeY) + BloY) * SizeZ +BloZ)*20
+	ReadBlock = Plugin.Memory.Read8Bit(handle, add) +  (Plugin.Memory.Read8Bit(handle, add + 1) Mod 8)*256 //Sorry to Mod 8  TvT
+End Function
+
+Function ReadBlockData(BloX, BloY, BloZ)//需要： handle, SubAddres
+	Dim add
+	add = CStr(Hex(SubAddress + (((BloX * SizeY) + BloY) * SizeZ +BloZ)*20))
+	ReadBlockData = dm.ReadData(handle, add, 20)
+End Function
+
+Function WriteBlock(BloX, BloY, BloZ, Block)//
+	If - 1  < BloX < SizeX And - 1  < BloY < SizeY And - 1  < BloZ < SizeZ Then 
+		Else 
+			WriteBlock = "Out Of Range"
+	End If
+	add = CStr(Hex(SubAddress + (((BloX * SizeY) + BloY) * SizeZ +BloZ)*20))
+	WriteBlock = dm.WriteInt(handle, add, 1, Block)
+End Function
+
+
+Function InMinePortal()
+	Call Lib.CC.GetCharPos()
+	If CharX = 30 Then 
+		InMinePortal = True
+	Else 
+		InMinePortal = False
+	End If
+End Function
+
+Function GetGameState()
+Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
-Call Lib.CC.GetCharPosInt()
+Call Lib.CC.GetCamera()
+Call Lib.CC.GetCharPos()
+
+If Azimu = 0 Then 
+	If Abs(Round(CharX) - CharX) < 0.01 And Abs(Round(CharZ) - CharZ) < 0.01 Then 
+		GetGameState = "Realm"
+	Else 
+		GetGameState = "Main_World"
+	End If
+Else 
+	GetGameState = "Others"
+End If
+
+End Function
+
+
+Function FindBlock(Block_Want)
+//2017-6-10 11:27:36
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
 
 
 
+Dim block_ID_want, block_type_want, find_method, find_bias
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+If block_ID_want = 100 Or block_ID_want = 109 Or block_ID_want = 119 Or block_ID_want = 120 Or block_ID_want = 146 Then 
+	//方法一：先搜索匹配的类型，以避免搜索大量相同ID的方块
+	find_method = 1
+	TracePrint "Conflicted block_ID"
+Else 
+	//方法零：先搜索匹配的ID
+	find_method = 0
+End If
 
+
+If find_method = 1 Then 
+	find_bias = 1
+Else 
+	find_bias = 0
+End If
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20 + find_bias ))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20 + find_bias ))
+my_range = Join(my_array, "-")
+
+
+Dim target_ads_arr, index
+If find_method = 1 Then 
+		
+	target_ads_arr = ""
+	For index = 0 To 7
+		target_ads_arr = target_ads_arr &"|"& dm.FindIntEx(handle, my_range, block_type_want + 16 * index, block_type_want + 16 * index, 2, 20, 0, 0) 
+	Next
+	target_ads_arr = Right(target_ads_arr, Len(target_ads_arr) - 1)
+
+Else 
+		
+	target_ads_arr = dm.FindIntEx(handle, my_range, block_ID_want, block_ID_want, 2, 20, 0, 0)
+
+End If
+
+TracePrint block_want & ":" & target_ads_arr
+target_ads_arr = Split(target_ads_arr, "|")
+
+Dim address, Final
+Final = ""
+
+Dim block_ID_read, block_type_read, block_read
+For Each address In target_ads_arr
+	If find_method = 1 Then
+		address = Hex(Lib.算法.十六进制转十进制(address) - 1)
+	End If
+	block_ID_read   = Lib.CC.AdrToPos(address, 0)
+	block_type_read = Lib.CC.AdrToPos(address, 1) Mod 8
+	block_read = block_type_read * 256 + block_ID_read
+	If block_read - block_want = 0 Then 
+		Final = Final &"|"& address	
+	End If
+Next
+
+If Final <> "" Then
+	Final = Right(Final, Len(Final) - 1)
+End If
+
+TracePrint Final
+FindBlock = Final
+
+End Function
+
+Function FindBlockEx(Block_Want)
+
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+
+Dim block_ID_want, block_type_want
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20 + 1))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20 + 1))
+my_range = Join(my_array, "-")
+
+Dim target_ads_arr, address, Final
+target_ads_arr = ""
+For index = 0 To 7
+target_ads_arr = target_ads_arr &"|"& dm.FindIntEx(handle, my_range, block_type_want + 16 * index, block_type_want + 16 * index, 2, 20, 0, 0) 
+Next
+target_ads_arr = Right(target_ads_arr, Len(target_ads_arr)-1)
+addresses = Split(target_ads_arr, "|")
+Final = ""
+For Each address In addresses
+	address = Hex(Lib.算法.十六进制转十进制(address) - 1)
+	Final = Final &"|"& address 
+Next
+Final = Right(Final, Len(Final)-1)
+
+
+FindBlockEx = dm.FindIntEx(handle, Final, block_ID_want, block_ID_want, 2, 20, 0, 0) 
+
+
+End Function
+
+
+
+Function MinePrecise(Target_x, Target_y, Target_z, Block_Want)
+
+Dim block_read
+block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
+If block_read  <> block_want  Then 
+	Exit Function
+End If
 
 Call Lib.CC.SetCamera(0, 89)
 
-BlockCount = 0
+//Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z + 1, 0)
+//Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z + 2, 351)
 
-Rem FarmStart
-//TarY = 1
-//TarZ = 99
-//
-//For SizeY - 1
-//	Call Lib.CC.GetCharPos()
-//	If CharX - SizeX / 2 < 0 Then 
-//		TarX = 0
-//		dx = 1
-//	Else
-//		TarX = SizeX - 1
-//		dx = -1
-//	End If
-//	
-//	
-//	For SizeX - 1
-//			If InArray(Lib.CC.ReadBlock(TarX, TarY, TarZ), ReapArray) = 1 Then 
-//				
-//				Delay TeleWait
-//				BlockCount = BlockCount + 1
-//				返回值 = Lib.CC.WriteBlock(TarX, TarY-1, TarZ, 0)
-//				返回值 = Lib.CC.TP(TarX, TarY -1,TarZ)
-//				Delay TeleWait2
-//				
-//				CCount = 0
-//				Call Plugin.Bkgnd.LeftClick(handle, 640, 560)
-//				Call BiasClick(handle, 0,80)
-//				While InArray(Lib.CC.ReadBlock(TarX,TarY,TarZ), ReapArray) = 1
-//					CCount = CCount + 1
-//					Delay 20
-//					If CCount > 100 Then 
-//						Delay 500
-//						Goto Skip1
-//					End If
-//				Wend
-//				
-//For index = 1 To max_entity
-//	
-//	Call Lib.CC.GetCharPos()
-//	Call Lib.CC.GetEntityID(index)
-//	Call Lib.CC.GetEntityPos(index)
-//	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 And EntityType < 10 Then
-//		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
-//	End If
-//Next
-//				Rem Skip1
-//				Delay GrabWait
-//			End If
-//			
-//			
-//		
-//		TarX = TarX + dx
-//		
-//	Next
-//
-//	TarY = TarY + 1
-//Next
+//If block_want = 240 Then 
+//	Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z, 705)
+//End If
+//Delay 200
 
-TarY = 1
-TarZ = 69
+For sub_z = Target_z -1 To 50 Step -1
+Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
+Next
 
-For SizeY - 1
-	Call Lib.CC.GetCharPos()
-	If CharX - SizeX / 2 < 0 Then 
-		TarX = 0
-		dx = 1
-	Else
-		TarX = SizeX - 1
-		dx = -1
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y + 0.1 , Target_z - 2)
+Delay 100
+
+
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
 	End If
-	
-	
-	For SizeX - 1
-			If InArray(Lib.CC.ReadBlock(TarX, TarY, TarZ), ReapArray) = 1 Then 
-				
-				Delay TeleWait
-				BlockCount = BlockCount + 1
-				返回值 = Lib.CC.WriteBlock(TarX, TarY-1, TarZ, 0)
-				返回值 = Lib.CC.TP(TarX, TarY -1,TarZ)
-				Delay TeleWait2
-				
-				CCount = 0
-//				Call Plugin.Bkgnd.LeftClick(handle, 640, 560)
-								Call BiasClick(handle, 0,80)
-				While InArray(Lib.CC.ReadBlock(TarX,TarY,TarZ), ReapArray) = 1
-					CCount = CCount + 1
-					Delay 20
-					If CCount > 100 Then 
-						Delay 500
-						Goto Skip2
-					End If
-				Wend
-				
-For index = 1 To max_entity
-	
+Wend
+
+//If Collect_Enable Then
+
+For index = 0 To EntitySize + 10
 	Call Lib.CC.GetCharPos()
-	Call Lib.CC.GetEntityID(index)
 	Call Lib.CC.GetEntityPos(index)
-	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 And EntityType < 10 Then
+	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
 		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
 	End If
 Next
-				Rem Skip2
-				Delay GrabWait
-			End If
-			
-			
-		
-		TarX = TarX + dx
-		
-	Next
+//End If
 
-	TarY = TarY + 1
-Next
 
-Goto FarmStart
-
-Function InArray(ele, TarArray)
-	For Each TarI In TarArray
-		If TarI - ele = 0 Then 
-			InArray = 1
-			Goto hell
-			Else 
-			InArray = 0
-		End If
-	Next
-	Rem hell
 End Function
 
-Sub OnScriptExit
-	MessageBox BlockCount
-End Sub
+Function MinePreciseCare(Target_x, Target_y, Target_z, Block_Want)
 
+Dim block_read
+block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
+If block_read  <> block_want  Then 
+	Exit Function
+End If
+
+Call Lib.CC.SetCamera(0, 89)
+
+For sub_z = Target_z -1 To 50 Step -1
+Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
+Next
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y +0.1 , Target_z - 2)
+Delay 100
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
+	End If
+Wend
+
+
+Dim index, scan_count
+scan_count = 0
+For index = 0 To e_size + 10
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetEntityPos(index)
+	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
+		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
+	End If
+Next
+
+
+
+If Lib.CC.ScanPpl() > 1 Then
+	scan_count = scan_count + 1
+End If
+
+If scan_count > 2 Then 
+	Delay 500
+	Call Lib.CC.CubicClick(handle, 1256, 22)
+	Delay 500
+	Call Lib.CC.CubicClick(handle, 560, 536)
+	EndScript
+End If
+
+
+End Function
+
+
+
+
+Function MinePreciseEx(Target_x, Target_y, Target_z, Block_Want)
+
+If Lib.CC.ReadBlock(Target_x, Target_y, Target_z) <> Block_Want Then 
+	Exit Function
+End If
+
+Call Lib.CC.SetCamera(0, 89)
+e_size = Lib.CC.GetEntitySize() 
+
+//Call Lib.CC.WriteBlock(Target_x - 1, Target_y, Target_z , 351)
+
+For sub_z = Target_z -1 To 50 Step -1
+Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
+Next
+
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y + 0.01, Target_z - 1 )
+Delay 100
+				
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
+	End If
+Wend
+
+Delay 400
+
+For index = 1 To e_size + 10
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetEntityPos(index)
+	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
+		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
+	End If
+Next
+/*
+land_z = 40
+While Lib.CC.ReadBlock(Target_x, Target_y + 1, land_z) = 0 And land_z - SizeZ  < 0
+	land_z = land_z + 1
+Wend
+Call Lib.CC.TP(Target_x, Target_y + 1, land_z-1)
+*/	
+
+End Function
+
+
+
+Function AdrToPos(Address, Bias)
+	Dim arr(1), biased_address
+	arr(0) = Address
+	arr(1) = CStr(Bias)
+	biased_address = Join(arr,"+")
+	AdrToPos = dm.ReadInt(handle,biased_address,2)
+End Function
+
+
+Function InArray(Element, Array)
+
+Dim index
+For Each index In Array
+	If index - Element = 0 Then 
+		InArray = True
+		Exit For
+	Else 
+		InArray = False
+	End If
+Next
+
+End Function
+
+Function ArrayReverse(Array)
+Dim array_count, index, temp
+array_count = UBound(Array)
+For index = 0 To Round(array_count / 2 - 0.1)
+	temp = Array()
+Next
+
+End Function
+
+
+Function ReapBlock(Block_Want, Direction)
+//2017-4-20 13:49:45
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntitySize()
+
+TracePrint "EntitySize:" & EntitySize
+
+Dim block_ID_want, block_type_want
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+
+
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20))
+my_range = Join(my_array, "-")
+
+Dim target_ads_arr, addresses
+//target_ads_arr = dm.FindIntEx(handle, my_range, block_ID_want, block_ID_want, 2, 20, 0, 0) 
+target_ads_arr = FindBlock(block_want)
+
+
+addresses = Split(target_ads_arr, "|")
+
+Dim array_count, index, temp
+array_count = UBound(addresses)
+
+
+If Direction = "up" Then 
+For index = 0 To Round(array_count / 2 - 0.1)
+	
+	temp = addresses(index)
+	addresses(index) = addresses(array_count - index)
+	addresses(array_count - index) = temp
+	
+Next
+End If
+
+
+For Each I In addresses
+	Dim block_ID, block_type, block
+	block_ID = Lib.CC.AdrToPos(I, 0)
+	block_type = Lib.CC.AdrToPos(I, 1) Mod 8
+	block = block_type * 256 + block_ID
+	If block = block_want Then 
+		BlockCount = BlockCount + 1
+		bx = Lib.CC.AdrToPos(I, 2)
+		by = Lib.CC.AdrToPos(I, 4)
+		bz = Lib.CC.AdrToPos(I, 6)
+		Call Lib.CC.MinePrecise(bx, by, bz, block_want)
+		
+		If Lib.CC.ScanPpl() > 1 Then
+			scan_count = scan_count + 1
+		End If
+		If scan_count > 2 Then 
+			Delay 500
+			Call Lib.CC.CubicClick(handle, 1256, 22)
+			Delay 500
+			Call Lib.CC.CubicClick(handle, 560, 536)
+			Exit Function
+		End If
+	End If
+		
+
+Next
+
+
+
+
+
+
+
+End Function
+
+
+Function ReapBlockEx(Block_Want, Direction)
+Dim target_ads_arr, addresses
+target_ads_arr = Lib.CC.FindBlockEx(Block_Want)
+addresses = Split(target_ads_arr, "|")
+Dim array_count, index, temp
+array_count = UBound(addresses)
+
+If Direction = "up" Then 
+For index = 0 To Round(array_count / 2 - 0.1)
+	temp = addresses(index)
+	addresses(index) = addresses(array_count - index)
+	addresses(array_count - index) = temp
+	
+Next
+End If
+
+For Each I In addresses
+	Dim block_ID, block_type, bx, by, bz
+	block_ID = Lib.CC.AdrToPos(I,0)
+	block_type = Lib.CC.AdrToPos(I, 1) Mod 8
+	
+	BlockCount = BlockCount + 1
+	bx = Lib.CC.AdrToPos(I, 2)
+	by = Lib.CC.AdrToPos(I, 4)
+	bz = Lib.CC.AdrToPos(I, 6)
+	Select Case Direction
+		Case "up"
+			Call Lib.CC.MinePrecise(bx, by, bz, Block_Want)
+		Case "down"
+			Call Lib.CC.MinePreciseEx(bx, by, bz, Block_Want)
+	End Select
+Next
+End Function
+
+
+Function ReapBlockExRange(Block_Sub, Block_Sup, Direction)
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20))
+my_range = Join(my_array, "-")
+
+Dim target_ads_arr, addresses
+target_ads_arr = dm.FindIntEx(handle, my_range, Block_Sub, Block_Sup, 1, 20, 0, 0) 
+addresses = Split(target_ads_arr, "|")
+
+Dim array_count, index, temp
+array_count = UBound(addresses)
+
+If Direction = "up" Then 
+For index = 0 To Round(array_count / 2 - 0.1)
+	
+	temp = addresses(index)
+	addresses(index) = addresses(array_count - index)
+	addresses(array_count - index) = temp
+	
+Next
+End If
+
+
+
+For Each I In addresses
+
+	Dim bx, by, bz
+	BlockCount = BlockCount + 1
+	bx = Lib.CC.AdrToPos(I, 2)
+	by = Lib.CC.AdrToPos(I, 4)
+	bz = Lib.CC.AdrToPos(I, 6)
+	Select Case Direction
+		Case "up"
+		Call Lib.CC.MinePrecise(bx, by, bz, Block_Want)
+		Case "down"
+		Call Lib.CC.MinePreciseEx(bx, by, bz, Block_Want)
+	End Select
+		
+Next
+
+End Function
+
+Function CubicClick(handle, click_x, click_y)
+	If dm.isBind(handle) = 1 Then 
+		dm.MoveTo click_x, click_y
+		dm.LeftClick 
+	Else 
+		Plugin.Bkgnd.LeftClick handle, click_x, click_y
+	End If
+	
+End Function
+
+Function FindMax(list)
+//找到数组中最大元素的位置
+Dim i, max_i, max
+For i = 0 To UBound(list)	'假设数组元素个数为100个
+  If max < list(i) Then 
+     max = list(i)'如果x大于数组中的元素，则让x等于数组中的这个元素，这样x最终就成了数组中最小的数
+     max_i = i'y获得x为最小值时，i的值，也就是x为数组中的第几个数字
+  End If
+Next
+
+FindMax = max_i
+End Function
+
+
+Function FindMin(list)
+//找到数组中最小元素的位置
+Dim i, min_i, min
+min = 10000000
+For i = 0 To UBound(list)	'假设数组元素个数为100个
+  If min > list(i) Then 
+     min = list(i)'如果x大于数组中的元素，则让x等于数组中的这个元素，这样x最终就成了数组中最小的数
+     min_i = i'y获得x为最小值时，i的值，也就是x为数组中的第几个数字
+  End If
+Next
+
+FindMin = min_i
+End Function
+
+
+Function ReplaceBlockAll(block_ini, block_fin)
+//2017-4-20 13:33:43
+
+addr_list = Lib.CC.FindBlock(block_ini)
+addr_list = Split(addr_list, "|")
+For Each addr In addr_list	
+	bx = Lib.CC.AdrToPos(addr, 2)
+	by = Lib.CC.AdrToPos(addr, 4)
+	bz = Lib.CC.AdrToPos(addr, 6)
+	///////TracePrint bx & by & bz
+	Call Lib.CC.WriteBlock(bx, by, bz, block_fin)	
+Next
+
+
+	
+	
+End Function
+
+Function GetCharPix()
+	CharPiX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+4C")
+	CharPiY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+50")	
+End Function
 
 Function BiasClick(handle, bx, by)
 
 Call Lib.CC.GetCharPix()
-
 Call Lib.CC.CubicClick(handle, CharPiX + bx, CharPiY + by)
 
+End Function
+
+Function DMBind(handle)
 	
+Call dm.BindWindowEx(handle, "dx2", "windows2", "dx", "", 0)
+
+End Function
+
+Function GetEntitySize()
+
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+float_z = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+38")
+
+
+Dim Index, Zero_Counter, Reset_Counter
+Index = 0
+Zero_Counter = 0
+index_bound = 0
+
+Do
 	
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+
+
+//获取实体上界
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And 0 < EntityZ < SizeZ Then
+	index_bound = index
+	If index_bound > 1000 Then 
+		Exit Do
+	End If
+	
+Else 
+	Zero_Counter = Zero_Counter + 1
+End If
+
+
+Index = Index + 1
+
+If Zero_Counter > 1 Then 
+	
+	Delay 200
+	Exit Do
+End If
+
+
+Loop
+
+Delay 50
+
+TracePrint index_bound
+GetEntitySize = index_bound
+EntitySize = index_bound
+End Function
+
+Function DetectEntity(x1,x2,y1,y2,z1,z2)
+	
+
+
+Dim index, e_size
+e_size = Lib.CC.GetEntitySize()
+For index = 0 To e_size + 10
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+DetectEntity = 0
+If x1 < EntityX < x2 And y1 < EntityY < y2 And z1 < EntityZ < z2 Then 
+	TracePrint EntityID
+	DetectEntity = 1
+	Exit Function
+End If
+	
+Next
+
+	
+End Function
+
+Function DetectPpl(x1,x2,y1,y2,z1,z2)
+	
+
+
+Dim index, e_size
+e_size = Lib.CC.GetEntitySize()
+For index = 0 To e_size + 10
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+DetectPpl = 0
+If x1 < EntityX < x2 And y1  < EntityY < y2 And z1 < EntityZ < z2 And EntityType = 236 Then
+	DetectPpl = 1
+	TracePrint "Detected"
+	Exit Function
+End If
+	
+Next
+
+	
+End Function
+
+Function DetectPplFull()
+	
+
+
+Dim index, e_size
+e_size = Lib.CC.GetEntitySize()
+TracePrint e_size
+For index = 0 To e_size + 10
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+DetectPplFull = 0
+TracePrint EntityType
+If 0 < EntityX < SizeX And 0  < EntityY < SizeY And 0 < EntityZ < SizeZ And EntityType = 236 Then
+	DetectPplFull = 1
+	TracePrint "Detected"
+	Exit Function
+End If
+	
+Next
+
+	
+End Function
+
+Function ScanPpl
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+
+reset_time = 1
+
+
+Dim Index, Zero_Counter, Reset_Counter
+Index = 0
+Zero_Counter = 0
+index_bound = 0
+
+Do
+	
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+
+//获取实体上界
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ Or EntityType = 236 Then 
+	index_bound = index 
+	
+Else 
+	Zero_Counter = Zero_Counter + 1
+	
+End If
+
+
+ScanPpl = 0
+
+Index = Index + 1
+
+If Zero_Counter > 1 Then 
+	
+	Delay 200
+	Exit Do
+End If
+
+
+Loop
+
+Delay 100
+
+TracePrint index_bound
+
+For index = 0 To index_bound
+
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+//Collect
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And EntityType = 236 Then 
+	ScanPpl = ScanPpl + 1
+	TracePrint "Scanned"
+End If
+
+Next
+
+
+
+
 End Function

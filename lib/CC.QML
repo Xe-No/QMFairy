@@ -390,13 +390,9 @@ Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
 Next
 
 
-
-
-
 Rem Grab	
-Call Lib.CC.TPEx(Target_x, Target_y , Target_z - 2)
+Call Lib.CC.TPEx(Target_x, Target_y + 0.1 , Target_z - 2)
 Delay 100
-
 
 
 CCount = 0
@@ -409,29 +405,75 @@ While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
 	End If
 Wend
 
-If Collect_Enable Then
+//If Collect_Enable Then
 
-Delay 400
-
-For index = 1 To Lib.CC.GetEntitySize()
+For index = 0 To EntitySize + 10
 	Call Lib.CC.GetCharPos()
 	Call Lib.CC.GetEntityPos(index)
 	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
 		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
-		dm.KeyPressChar "W"
 	End If
 Next
-End If
-/*
+//End If
 
-land_z = 40
-While Lib.CC.ReadBlock(Target_x, Target_y + 1, land_z) = 0 And land_z - SizeZ  < 0
-	land_z = land_z + 1
-Wend
-Call Lib.CC.TP(Target_x, Target_y + 1, land_z-1)
-	*/
 
 End Function
+
+Function MinePreciseCare(Target_x, Target_y, Target_z, Block_Want)
+
+Dim block_read
+block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
+If block_read  <> block_want  Then 
+	Exit Function
+End If
+
+Call Lib.CC.SetCamera(0, 89)
+
+For sub_z = Target_z -1 To 50 Step -1
+Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
+Next
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y +0.1 , Target_z - 2)
+Delay 100
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
+	End If
+Wend
+
+
+Dim index, scan_count
+scan_count = 0
+For index = 0 To e_size + 10
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetEntityPos(index)
+	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
+		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
+	End If
+Next
+
+
+
+If Lib.CC.ScanPpl() > 1 Then
+	scan_count = scan_count + 1
+End If
+
+If scan_count > 2 Then 
+	Delay 500
+	Call Lib.CC.CubicClick(handle, 1256, 22)
+	Delay 500
+	Call Lib.CC.CubicClick(handle, 560, 536)
+	EndScript
+End If
+
+
+End Function
+
 
 
 
@@ -523,8 +565,9 @@ Function ReapBlock(Block_Want, Direction)
 //2017-4-20 13:49:45
 Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntitySize()
 
-
+TracePrint "EntitySize:" & EntitySize
 
 Dim block_ID_want, block_type_want
 block_ID_want   = Block_Want Mod 256
@@ -544,10 +587,6 @@ target_ads_arr = FindBlock(block_want)
 
 addresses = Split(target_ads_arr, "|")
 
-
-
-
-
 Dim array_count, index, temp
 array_count = UBound(addresses)
 
@@ -562,15 +601,8 @@ For index = 0 To Round(array_count / 2 - 0.1)
 Next
 End If
 
-
-
-
-//Dim bx, by, bz, addresses
-//addresses = Lib.CC.FindBlock(block_want)
-//MessageBox Len(addresses)
-//addresses = Split(addresses, "|")
-//
-
+Dim I, scan_count
+scan_count = 0
 For Each I In addresses
 	Dim block_ID, block_type, block
 	block_ID = Lib.CC.AdrToPos(I, 0)
@@ -581,15 +613,23 @@ For Each I In addresses
 		bx = Lib.CC.AdrToPos(I, 2)
 		by = Lib.CC.AdrToPos(I, 4)
 		bz = Lib.CC.AdrToPos(I, 6)
-		Select Case Direction
-			Case "up"
-			Call Lib.CC.MinePrecise(bx, by, bz, block_want)
-			Case "down"
-			Call Lib.CC.MinePreciseEx(bx, by, bz, block_want)
-		End Select
-	
+		Call Lib.CC.MinePrecise(bx, by, bz, block_want)
+		
+		If Lib.CC.ScanPpl() > 1 Then
+			scan_count = scan_count + 1
+		End If
+		If scan_count > 2 Then 
+			Delay 500
+			Call Lib.CC.CubicClick(handle, 1256, 22)
+			Delay 500
+			Call Lib.CC.CubicClick(handle, 560, 536)
+			Exit Function
+		End If
 	End If
+		
+
 Next
+
 
 
 
@@ -801,7 +841,7 @@ Delay 50
 
 TracePrint index_bound
 GetEntitySize = index_bound
-	
+EntitySize = index_bound
 End Function
 
 Function DetectEntity(x1,x2,y1,y2,z1,z2)
@@ -839,10 +879,99 @@ Call Lib.CC.GetEntityID(index)
 DetectPpl = 0
 If x1 < EntityX < x2 And y1  < EntityY < y2 And z1 < EntityZ < z2 And EntityType = 236 Then
 	DetectPpl = 1
+	TracePrint "Detected"
 	Exit Function
 End If
 	
 Next
 
 	
+End Function
+
+Function DetectPplFull()
+	
+
+
+Dim index, e_size
+e_size = Lib.CC.GetEntitySize()
+TracePrint e_size
+For index = 0 To e_size + 10
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+DetectPplFull = 0
+TracePrint EntityType
+If 0 < EntityX < SizeX And 0  < EntityY < SizeY And 0 < EntityZ < SizeZ And EntityType = 236 Then
+	DetectPplFull = 1
+	TracePrint "Detected"
+	Exit Function
+End If
+	
+Next
+
+	
+End Function
+
+Function ScanPpl
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+
+reset_time = 1
+
+
+Dim Index, Zero_Counter, Reset_Counter
+Index = 0
+Zero_Counter = 0
+index_bound = 0
+
+Do
+	
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+
+//获取实体上界
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And ( EntityType < 10  Or EntityType = 236 ) Then 
+	index_bound = index 
+	
+Else 
+	Zero_Counter = Zero_Counter + 1
+	
+End If
+
+
+ScanPpl = 0
+
+Index = Index + 1
+
+If Zero_Counter > 0 Then 
+	
+	Delay 200
+	Exit Do
+End If
+
+
+Loop
+
+Delay 100
+
+TracePrint index_bound
+
+For index = 0 To index_bound
+
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+//Collect
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And EntityType = 236 Then 
+	ScanPpl = ScanPpl + 1
+	TracePrint "Scanned"
+End If
+
+Next
+
+
+
+
 End Function

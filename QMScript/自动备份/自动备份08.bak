@@ -1,228 +1,977 @@
 [General]
 SyntaxVersion=2
-BeginHotkey=121
-BeginHotkeyMod=0
-PauseHotkey=0
-PauseHotkeyMod=0
-StopHotkey=123
-StopHotkeyMod=0
-RunOnce=1
-EnableWindow=
-MacroID=34e47623-d421-4d2e-a1fb-ece9c7cfa68a
-Description=收获方块X【领域级】【测试中】
-Enable=0
-AutoRun=0
-[Repeat]
-Type=0
-Number=1
-[SetupUI]
-Type=2
-QUI=
-[Relative]
-SetupOCXFile=
+MacroID=f6ae5bd1-b251-4b0c-b4c9-1d8cd6e27843
 [Comment]
 
-[Attachment]
-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
-
-
-[UIPackage]
-UEsDBBQAAgAIAA62z0rvYAM33QIAAAgeAAAJABEAVUlQYWNrYWdlVVQNAAe3DkNZtw5DWbcOQ1ntWN1uEkEU/gaQAgVKaYst/oQLH6D0xhtjYhubNKFqCproHbaoRLo0QGN9Dx9A36BeeWFMvTR6ofUJNFET450m3sl6Zpkt00bizsy2aw0fOQw/O/vNnJnznTMbRg/v3o5/ePI0/xEHcBFhdO04otJvTJiDDBAS37u2bbs/20McK/wii4g15Gt9gmyELEEWI4uTjZKlyJLiuu7Qbf8NVtCkVwcFXIZFbQsPoYIc7Rj3Xuwv124//3Hzy+f3LEyfXwphuY4lzEIfMTDm8ocGXPP4UY/X5Zf/W0AFJYMRJAT/mIgdVf4K+XsDNVxBFevUqiJLKiyvp9d+EdG68XwUNsS/h8Vma90g/MD7Fw36M5jBtL8p3uzubj97sfNVt79CyB5Kf13d6eufuv4wSSt51qniNhqaY0gjxEZFzeKVPyTp3w3U0SbTHUGG+JPo171e+oQl/hVirWINV8kPDcXcK/SfRdGr17zyRyT+CvFvUd43WH+muv587WPi8wJVHw2yluZIJjX2X1Saf59/ntZhFffV+Z16Jq7g/5ED679q6P+U8KdX/pizb/fjHgXlFo4ffv55zk5aWC4XylWrXSjXWvU7A/ovWRubnfmm9tTd/ro5MOj8d4uUp0X6U6N3HaQ14i8u7f8SxZ561O3f/2lxP6/8CYl/kfgts/hTnj/PVxf29IefP4oG/GyPPzvgGvfccUjnD0f/Tyv4P4m+/gdRf6TEHuTwo/6YBs8D3uefhr/1xwy1ZxT4x+Bv/TFB7UkF/gyCrT/G0cvBvfgzrj8c/rMK88/C1/rD8WdOgX9C4jfF60+vvu18LyIomJ5/5sjOkZ1nPBeoI+jzp2n940f9mad2SmH/TaJffwZRf0zB3/rjlNAUr/w5BFt/cK12649LpD513KUx8CxsHcn5a1qa/zVSvTa9HjgauKY8f53nnzMS/zI2yQMd8kGJzFLOwTrzz8M//RUaqPz8d4ghOH4DUEsBAhcLFAACAAgADrbPSu9gAzfdAgAACB4AAAkACQAAAAAAAAAAAACAAAAAAFVJUGFja2FnZVVUBQAHtw5DWVBLBQYAAAAAAQABAEAAAAAVAwAAAAA=
-
-
 [Script]
-//UserVar WorldName = "WorldA" "世界名称"
-//WorldName = "WorldA"
-
-UserVar ReapCases=DropList{"大理石 579,585,586 ":1|"块石 133,220,235":2|"All":3|"Rubber&Cotton":4}=2 "收获类型"
-UserVar ReapString = "127,147,143,220,235,223,228,240,372,466" "目标方块"
-BlockCount = 0
 
 
-Call Lib.CC.Initailize()
+Sub Initailize
+	Set dm = createobject("dm.dmsoft")  //创建对象
+	handle = Plugin.Window.MousePoint	//获取鼠标指向窗口的句柄
+	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F29BC]+874", 0)//获取地图区域基址
+	dm.SetPath "C:\Users\Administrator\Documents\DmRes"'大漠全局路径设置
+End Sub
+
+Sub GetSubAddress
+
+	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F29BC]+874", 0)
+	
+End Sub
+
+Function GetAccState(name)
+
+//判断账号状态
+//0 正常
+//1 无效
+Dim ban_list
+ban_list = dm.ReadFile("ban_list.txt")
+ban_list = Split(ban_list, vbcrLf)
+//MessageBox ban_list(1)
+For Each name_b in ban_list
+	If name_b = name Then 
+		//MessageBox name_b
+		GetAccState = 1
+		Exit Function
+	End If
+Next
+
+GetAccState = 0	
+	
+End Function
+
+
+Sub GetWorldSize  //需要: handle, SubAddress   返回: SizeX, SizeY, SizeZ
+	SizeZ = 1
+	SizeY = 1
+	SizeX = 1
+	Do While Plugin.Memory.Read8Bit(handle, SubAddress + 20*SizeZ + 6) - SizeZ =0
+		SizeZ = SizeZ + 1
+	Loop
+	Do While Plugin.Memory.Read8Bit(handle, SubAddress + 20*SizeZ*SizeY + 4) - SizeY = 0
+		SizeY = SizeY + 1
+	Loop
+	Do While Plugin.Memory.Read8Bit(handle, SubAddress + 20*SizeZ*SizeY*SizeX + 2) - SizeX = 0 
+		SizeX = SizeX + 1
+	Loop
+End Sub
+
+
+Sub GetCharPos    //??
+	CharX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24")
+	CharY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28")
+	CharZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C")
+End Sub
+
+
+Function SetCharPos(TPX, TPY, TPZ)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+End Function
+
+Sub GetCharPosInt    //??
+	CharX = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24"))
+	CharY = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28"))
+	CharZ = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C"))
+End Sub
+
+Function GetEntityPos(Index)
+	EntityX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+24")
+	EntityY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+28")
+	EntityZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+2C")
+	EntityX2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+34")
+	EntityY2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+38")
+	EntityZ2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+3C")
+End Function
+
+Function GetEntityID(index)
+	EntityID   = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F2", 1)
+	EntityType = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F0", 2)
+	EntityNum  = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F4", 1)
+End Function
+
+Function SetEntityPos(Index, Target_X, Target_Y, Target_Z)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+24", Target_X)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+28", Target_Y)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+2C", Target_Z)
+End Function
+
+Sub GetFocuPos   //??
+	FocuX = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+984")
+	FocuY = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+988")
+	FocuZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+98C")
+End Sub
+
+Sub GetCamPos
+	CamX = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+990")
+	CamY = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+994")
+	CamZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+998")
+End Sub
+
+Sub GetCamera    //??
+	Azimu = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+97C"))
+	Polar = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+980"))
+End Sub
+
+Sub DrawCharPos   //??
+	CharX = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24"))
+	CharY = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28"))
+	CharZ = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C"))
+	dm_ret = dm.FoobarFillRect(foobar, 4*CharX , 4*CharY, 4*CharX+4 , 4*CharY + 4, "FF0000")
+	
+End Sub
+
+Function BindClick(ClickX, ClickY)
+		dm.MoveTo ClickX, ClickY
+		dm.LeftClick 
+End Function
+
+Function SetCamera(Azimu, Polar)
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F29BC]+97C", Azimu)
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F29BC]+980", Polar)
+End Function
+
+Function TPT(TPX, TPY, TPZ)
+
+	Dim bx, by, bz
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetFocuPos()
+	bx = CharX - FocuX
+	by = CharY - FocuY
+	bz = CharZ - FocuZ
+	
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+
+	Do
+		Call Lib.CC.GetCharPos()
+		Call Lib.CC.GetFocuPos()
+		Delay 50
+		TracePrint Abs(CharX - FocuX - bx) + Abs(CharY - FocuY - by) + Abs(CharZ - FocuZ - bz)
+	Loop While Abs(CharX - FocuX - bx) + Abs(CharY - FocuY - by) + Abs(CharZ - FocuZ - bz) > 0.1 
+End Function
+
+Function TPEx(TPX, TPY, TPZ)//This function based on TP, but require Z equals, too.
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+	Dim cam_x, cam_y, cam_z, count
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	count = 0
+	Do
+		cam_x = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+984")
+		cam_y = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+988")
+		cam_z = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+98C")
+		count = count + 1
+		Delay 20
+	Loop While Abs(cam_x - TPX) + Abs(cam_y - TPY) + Abs(cam_z - TPZ) > 0.1 And count < 30
+End Function
+
+Function TP(TPX, TPY, TPZ)
+
+	
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+
+	Delay 100
+End Function
+
+Function TPP(TPX, TPY, TPZ)
+
+	
+	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
+		Exit Function
+	End If
+
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	dm_ret = WriteBlock( round(TPX) , round(TPY), round(TPZ + 1 ), 350  )
+
+	Delay 100
+End Function
+
+
+//函数
+
+Function ReadBlock(BloX, BloY, BloZ)//需要： handle, SubAddres
+	Dim add
+	add = SubAddress + (((BloX * SizeY) + BloY) * SizeZ +BloZ)*20
+	ReadBlock = Plugin.Memory.Read8Bit(handle, add) +  (Plugin.Memory.Read8Bit(handle, add + 1) Mod 8)*256 //Sorry to Mod 8  TvT
+End Function
+
+Function ReadBlockData(BloX, BloY, BloZ)//需要： handle, SubAddres
+	Dim add
+	add = CStr(Hex(SubAddress + (((BloX * SizeY) + BloY) * SizeZ +BloZ)*20))
+	ReadBlockData = dm.ReadData(handle, add, 20)
+End Function
+
+Function WriteBlock(BloX, BloY, BloZ, Block)//
+	If - 1  < BloX < SizeX And - 1  < BloY < SizeY And - 1  < BloZ < SizeZ Then 
+		Else 
+			WriteBlock = "Out Of Range"
+	End If
+	add = CStr(Hex(SubAddress + (((BloX * SizeY) + BloY) * SizeZ +BloZ)*20))
+	WriteBlock = dm.WriteInt(handle, add, 1, Block)
+End Function
+
+
+Function InMinePortal()
+	Call Lib.CC.GetCharPos()
+	If CharX = 30 Then 
+		InMinePortal = True
+	Else 
+		InMinePortal = False
+	End If
+End Function
+
+Function GetGameState()
+Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetCamera()
+Call Lib.CC.GetCharPos()
 
-//转化不利的方块
-Call Lib.CC.ReplaceBlockAll(218, 138)
-Call Lib.CC.ReplaceBlockAll(222, 138)
-Call Lib.CC.ReplaceBlockAll(234, 138)
-
-
-
-
-
-Dim block, ReapArray
-ReapArray = Split(ReapString,",")
-For Each block In ReapArray
-
-Call Lib.CC.ReplaceBlockAll(block, 705)
-
-Next
-
-Call Lib.CC.ReapBlock(705, "down")
-
-EndScript
-
-//dm_ret = dm.BindWindowEx(handle, "dx2", "dx.mouse.position.lock.api|dx.mouse.position.lock.message", "dx", "", 0)
-dm_ret = dm.BindWindowEx(handle, "dx2", "dx.mouse.position.lock.api", "dx", "", 0)
-
-
-Delay 100
-Dm.SetPath "C:\Users\Administrator\Documents\DmRes"'大漠全局路径设置
-
-Rem Start
-
-For World_Index = 1 To 50
-
-Call TPMine(WorldName, World_Index)
-Call JumpForward
-If WaitLoadingNew = 1 Then 
-	Goto Skip
-End If
-Call Hunt//
-
-Call WaitLoadingNew
-Delay 1500
-
-Rem Skip
-Next
-
-
-Sub TPMine(WorldName, MineIndex)
-Dim MyString, MyArray
-MinePos = Lib.文件.读取指定行文本内容("C:\Users\Administrator\Documents\DmRes\" & WorldName & ".txt",MineIndex)
-If MinePos = "" Then 
-//EndScript
-Goto Start
+If Azimu = 0 Then 
+	If Abs(Round(CharX) - CharX) < 0.01 And Abs(Round(CharZ) - CharZ) < 0.01 Then 
+		GetGameState = "Realm"
+	Else 
+		GetGameState = "Main_World"
+	End If
 Else 
-	MyString = Split(MinePos, ",", - 1 , 1)
-	MineX = CSng(MyString(0))
-	MineY = CSng(MyString(1))
-	MineZ = CSng(MyString(2))
-	
-	返回值 = Lib.CC.TP(MineX, MineY, MineZ)
-	Delay 1000
+	GetGameState = "Others"
 End If
-	
-	
-End Sub
+
+End Function
 
 
-Sub JumpForward
-
-Delay 200
-dm.KeyDownChar "W"
-Delay 16
-dm.KeyDownChar "Space"
-Delay 219
-dm.KeyUpChar "Space"
-Delay 31
-dm.KeyUpChar "W"
-Delay 200
-
-End Sub
-
-
-Sub Hunt
-Dim index
+Function FindBlock(Block_Want)
+//2017-6-10 11:27:36
 Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
 
-For index = 377 To 388
-	Call Lib.CC.ReapBlock(index, "down")
-Next
 
-For index = 405 To 416
-	Call Lib.CC.ReapBlock(index, "down")
-Next
 
-For index = 618 To 629
-	If index = 621 Then 
-		Call Lib.CC.ReapBlockEx(index, "down")
-	Else
-		Call Lib.CC.ReapBlock(index, "down")
+Dim block_ID_want, block_type_want, find_method, find_bias
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+If block_ID_want = 100 Or block_ID_want = 109 Or block_ID_want = 119 Or block_ID_want = 120 Or block_ID_want = 146 Then 
+	//方法一：先搜索匹配的类型，以避免搜索大量相同ID的方块
+	find_method = 1
+	TracePrint "Conflicted block_ID"
+Else 
+	//方法零：先搜索匹配的ID
+	find_method = 0
+End If
+
+
+If find_method = 1 Then 
+	find_bias = 1
+Else 
+	find_bias = 0
+End If
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20 + find_bias ))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20 + find_bias ))
+my_range = Join(my_array, "-")
+
+
+Dim target_ads_arr, index
+If find_method = 1 Then 
+		
+	target_ads_arr = ""
+	For index = 0 To 7
+		target_ads_arr = target_ads_arr &"|"& dm.FindIntEx(handle, my_range, block_type_want + 16 * index, block_type_want + 16 * index, 2, 20, 0, 0) 
+	Next
+	target_ads_arr = Right(target_ads_arr, Len(target_ads_arr) - 1)
+
+Else 
+		
+	target_ads_arr = dm.FindIntEx(handle, my_range, block_ID_want, block_ID_want, 2, 20, 0, 0)
+
+End If
+
+TracePrint block_want & ":" & target_ads_arr
+target_ads_arr = Split(target_ads_arr, "|")
+
+Dim address, Final
+Final = ""
+
+Dim block_ID_read, block_type_read, block_read
+For Each address In target_ads_arr
+	If find_method = 1 Then
+		address = Hex(Lib.算法.十六进制转十进制(address) - 1)
+	End If
+	block_ID_read   = Lib.CC.AdrToPos(address, 0)
+	block_type_read = Lib.CC.AdrToPos(address, 1) Mod 8
+	block_read = block_type_read * 256 + block_ID_read
+	If block_read - block_want = 0 Then 
+		Final = Final &"|"& address	
 	End If
 Next
 
-For index = 632 To 643
-	If index = 632 Then 
-		Call Lib.CC.ReapBlockEx(index, "down")
-	Else
-		Call Lib.CC.ReapBlock(index, "down")
-	End If
-Next
+If Final <> "" Then
+	Final = Right(Final, Len(Final) - 1)
+End If
 
+TracePrint Final
+FindBlock = Final
 
-
-
-
-
-Rem SkipHunting
-Call Lib.CC.CubicClick(handle, 1256, 22)
-//Delay 100
-//Call Lib.CC.CubicClick(handle, 560, 536)
-
-Delay 100
-End Sub
-
-
-Sub WaitInnerWorld
-
-Do
-Delay 1000
-Loop Until Lib.CC.GetGameState() = "Realm"
-
-End Sub
-
-
-Sub WaitOverWorld
-
-Do
-Delay 1000
-Loop Until Lib.CC.GetGameState() = "Main_World"
-
-End Sub
-
-
-Function AdrToPos(adr, off)
-	Dim Arr(1)
-	Arr(0) = adr
-	Arr(1) = CStr(off)
-	PStr = Join(Arr,"+")
-	AdrToPos = dm.ReadInt(handle,PStr,2)
 End Function
 
-Sub OnScriptExit
-	MessageBox BlockCount
-End Sub
+Function FindBlockEx(Block_Want)
+
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+
+Dim block_ID_want, block_type_want
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20 + 1))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20 + 1))
+my_range = Join(my_array, "-")
+
+Dim target_ads_arr, address, Final
+target_ads_arr = ""
+For index = 0 To 7
+target_ads_arr = target_ads_arr &"|"& dm.FindIntEx(handle, my_range, block_type_want + 16 * index, block_type_want + 16 * index, 2, 20, 0, 0) 
+Next
+target_ads_arr = Right(target_ads_arr, Len(target_ads_arr)-1)
+addresses = Split(target_ads_arr, "|")
+Final = ""
+For Each address In addresses
+	address = Hex(Lib.算法.十六进制转十进制(address) - 1)
+	Final = Final &"|"& address 
+Next
+Final = Right(Final, Len(Final)-1)
 
 
-Function WaitLoadingNew()
-Dim count_wln
+FindBlockEx = dm.FindIntEx(handle, Final, block_ID_want, block_ID_want, 2, 20, 0, 0) 
 
-count_wln = 0
 
-Do
-	Delay 200
-	count_wln = count_wln + 1
-	If count_wln > 50 Then 
-		WaitLoadingNew = 1
-		Exit Function
+End Function
+
+
+
+Function MinePrecise(Target_x, Target_y, Target_z, Block_Want)
+
+Dim block_read
+block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
+If block_read  <> block_want  Then 
+	Exit Function
+End If
+
+Call Lib.CC.SetCamera(0, 89)
+
+//Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z + 1, 0)
+//Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z + 2, 351)
+
+//If block_want = 240 Then 
+//	Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z, 705)
+//End If
+//Delay 200
+
+For sub_z = Target_z -1 To 50 Step -1
+Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
+Next
+
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y + 0.1 , Target_z - 2)
+Delay 100
+
+
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
+	End If
+Wend
+
+//If Collect_Enable Then
+
+For index = 0 To EntitySize + 10
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetEntityPos(index)
+	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
+		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
+	End If
+Next
+//End If
+
+
+End Function
+
+Function MinePreciseCare(Target_x, Target_y, Target_z, Block_Want)
+
+Dim block_read
+block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
+If block_read  <> block_want  Then 
+	Exit Function
+End If
+
+Call Lib.CC.SetCamera(0, 89)
+
+For sub_z = Target_z -1 To 50 Step -1
+Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
+Next
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y +0.1 , Target_z - 2)
+Delay 100
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
+	End If
+Wend
+
+
+Dim index, scan_count
+scan_count = 0
+For index = 0 To e_size + 10
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetEntityPos(index)
+	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
+		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
+	End If
+Next
+
+
+
+If Lib.CC.ScanPpl() > 1 Then
+	scan_count = scan_count + 1
+End If
+
+If scan_count > 2 Then 
+	Delay 500
+	Call Lib.CC.CubicClick(handle, 1256, 22)
+	Delay 500
+	Call Lib.CC.CubicClick(handle, 560, 536)
+	EndScript
+End If
+
+
+End Function
+
+
+
+
+Function MinePreciseEx(Target_x, Target_y, Target_z, Block_Want)
+
+If Lib.CC.ReadBlock(Target_x, Target_y, Target_z) <> Block_Want Then 
+	Exit Function
+End If
+
+Call Lib.CC.SetCamera(0, 89)
+e_size = Lib.CC.GetEntitySize() 
+
+//Call Lib.CC.WriteBlock(Target_x - 1, Target_y, Target_z , 351)
+
+For sub_z = Target_z -1 To 50 Step -1
+Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
+Next
+
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y + 0.01, Target_z - 1 )
+Delay 100
+				
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
+	End If
+Wend
+
+Delay 400
+
+For index = 1 To e_size + 10
+	Call Lib.CC.GetCharPos()
+	Call Lib.CC.GetEntityPos(index)
+	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
+		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
+	End If
+Next
+/*
+land_z = 40
+While Lib.CC.ReadBlock(Target_x, Target_y + 1, land_z) = 0 And land_z - SizeZ  < 0
+	land_z = land_z + 1
+Wend
+Call Lib.CC.TP(Target_x, Target_y + 1, land_z-1)
+*/	
+
+End Function
+
+
+
+Function AdrToPos(Address, Bias)
+	Dim arr(1), biased_address
+	arr(0) = Address
+	arr(1) = CStr(Bias)
+	biased_address = Join(arr,"+")
+	AdrToPos = dm.ReadInt(handle,biased_address,2)
+End Function
+
+
+Function InArray(Element, Array)
+
+Dim index
+For Each index In Array
+	If index - Element = 0 Then 
+		InArray = True
+		Exit For
+	Else 
+		InArray = False
+	End If
+Next
+
+End Function
+
+Function ArrayReverse(Array)
+Dim array_count, index, temp
+array_count = UBound(Array)
+For index = 0 To Round(array_count / 2 - 0.1)
+	temp = Array()
+Next
+
+End Function
+
+
+Function ReapBlock(Block_Want, Direction)
+//2017-4-20 13:49:45
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntitySize()
+
+TracePrint "EntitySize:" & EntitySize
+
+Dim block_ID_want, block_type_want
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+
+
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20))
+my_range = Join(my_array, "-")
+
+Dim target_ads_arr, addresses
+//target_ads_arr = dm.FindIntEx(handle, my_range, block_ID_want, block_ID_want, 2, 20, 0, 0) 
+target_ads_arr = FindBlock(block_want)
+
+
+addresses = Split(target_ads_arr, "|")
+
+Dim array_count, index, temp
+array_count = UBound(addresses)
+
+
+If Direction = "up" Then 
+For index = 0 To Round(array_count / 2 - 0.1)
+	
+	temp = addresses(index)
+	addresses(index) = addresses(array_count - index)
+	addresses(array_count - index) = temp
+	
+Next
+End If
+
+Dim I, scan_count
+scan_count = 0
+For Each I In addresses
+	Dim block_ID, block_type, block
+	block_ID = Lib.CC.AdrToPos(I, 0)
+	block_type = Lib.CC.AdrToPos(I, 1) Mod 8
+	block = block_type * 256 + block_ID
+	If block = block_want Then 
+		BlockCount = BlockCount + 1
+		bx = Lib.CC.AdrToPos(I, 2)
+		by = Lib.CC.AdrToPos(I, 4)
+		bz = Lib.CC.AdrToPos(I, 6)
+		Call Lib.CC.MinePrecise(bx, by, bz, block_want)
+		
+		If Lib.CC.ScanPpl() > 1 Then
+			scan_count = scan_count + 1
+		End If
+		If scan_count > 2 Then 
+			Delay 500
+			Call Lib.CC.CubicClick(handle, 1256, 22)
+			Delay 500
+			Call Lib.CC.CubicClick(handle, 560, 536)
+			Exit Function
+		End If
+	End If
+		
+
+Next
+
+
+
+
+
+
+
+End Function
+
+
+Function ReapBlockEx(Block_Want, Direction)
+Dim target_ads_arr, addresses
+target_ads_arr = Lib.CC.FindBlockEx(Block_Want)
+addresses = Split(target_ads_arr, "|")
+Dim array_count, index, temp
+array_count = UBound(addresses)
+
+If Direction = "up" Then 
+For index = 0 To Round(array_count / 2 - 0.1)
+	temp = addresses(index)
+	addresses(index) = addresses(array_count - index)
+	addresses(array_count - index) = temp
+	
+Next
+End If
+
+For Each I In addresses
+	Dim block_ID, block_type, bx, by, bz
+	block_ID = Lib.CC.AdrToPos(I,0)
+	block_type = Lib.CC.AdrToPos(I, 1) Mod 8
+	
+	BlockCount = BlockCount + 1
+	bx = Lib.CC.AdrToPos(I, 2)
+	by = Lib.CC.AdrToPos(I, 4)
+	bz = Lib.CC.AdrToPos(I, 6)
+	Select Case Direction
+		Case "up"
+			Call Lib.CC.MinePrecise(bx, by, bz, Block_Want)
+		Case "down"
+			Call Lib.CC.MinePreciseEx(bx, by, bz, Block_Want)
+	End Select
+Next
+End Function
+
+
+Function ReapBlockExRange(Block_Sub, Block_Sup, Direction)
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20))
+my_range = Join(my_array, "-")
+
+Dim target_ads_arr, addresses
+target_ads_arr = dm.FindIntEx(handle, my_range, Block_Sub, Block_Sup, 1, 20, 0, 0) 
+addresses = Split(target_ads_arr, "|")
+
+Dim array_count, index, temp
+array_count = UBound(addresses)
+
+If Direction = "up" Then 
+For index = 0 To Round(array_count / 2 - 0.1)
+	
+	temp = addresses(index)
+	addresses(index) = addresses(array_count - index)
+	addresses(array_count - index) = temp
+	
+Next
+End If
+
+
+
+For Each I In addresses
+
+	Dim bx, by, bz
+	BlockCount = BlockCount + 1
+	bx = Lib.CC.AdrToPos(I, 2)
+	by = Lib.CC.AdrToPos(I, 4)
+	bz = Lib.CC.AdrToPos(I, 6)
+	Select Case Direction
+		Case "up"
+		Call Lib.CC.MinePrecise(bx, by, bz, Block_Want)
+		Case "down"
+		Call Lib.CC.MinePreciseEx(bx, by, bz, Block_Want)
+	End Select
+		
+Next
+
+End Function
+
+Function CubicClick(handle, click_x, click_y)
+	If dm.isBind(handle) = 1 Then 
+		dm.MoveTo click_x, click_y
+		dm.LeftClick 
+	Else 
+		Plugin.Bkgnd.LeftClick handle, click_x, click_y
 	End If
 	
-Loop Until Plugin.Bkgnd.GetPixelColor(handle, 741, 502) = "FFFFFF"
+End Function
 
-count_wln = 0
+Function FindMax(list)
+//找到数组中最大元素的位置
+Dim i, max_i, max
+For i = 0 To UBound(list)	'假设数组元素个数为100个
+  If max < list(i) Then 
+     max = list(i)'如果x大于数组中的元素，则让x等于数组中的这个元素，这样x最终就成了数组中最小的数
+     max_i = i'y获得x为最小值时，i的值，也就是x为数组中的第几个数字
+  End If
+Next
+
+FindMax = max_i
+End Function
+
+
+Function FindMin(list)
+//找到数组中最小元素的位置
+Dim i, min_i, min
+min = 10000000
+For i = 0 To UBound(list)	'假设数组元素个数为100个
+  If min > list(i) Then 
+     min = list(i)'如果x大于数组中的元素，则让x等于数组中的这个元素，这样x最终就成了数组中最小的数
+     min_i = i'y获得x为最小值时，i的值，也就是x为数组中的第几个数字
+  End If
+Next
+
+FindMin = min_i
+End Function
+
+
+Function ReplaceBlockAll(block_ini, block_fin)
+//2017-4-20 13:33:43
+
+addr_list = Lib.CC.FindBlock(block_ini)
+addr_list = Split(addr_list, "|")
+For Each addr In addr_list	
+	bx = Lib.CC.AdrToPos(addr, 2)
+	by = Lib.CC.AdrToPos(addr, 4)
+	bz = Lib.CC.AdrToPos(addr, 6)
+	///////TracePrint bx & by & bz
+	Call Lib.CC.WriteBlock(bx, by, bz, block_fin)	
+Next
+
+
+	
+	
+End Function
+
+Function GetCharPix()
+	CharPiX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+4C")
+	CharPiY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+50")	
+End Function
+
+Function BiasClick(handle, bx, by)
+
+Call Lib.CC.GetCharPix()
+Call Lib.CC.CubicClick(handle, CharPiX + bx, CharPiY + by)
+
+End Function
+
+Function DMBind(handle)
+	
+Call dm.BindWindowEx(handle, "dx2", "windows2", "dx", "", 0)
+
+End Function
+
+Function GetEntitySize()
+
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+float_z = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+38")
+
+
+Dim Index, Zero_Counter, Reset_Counter
+Index = 0
+Zero_Counter = 0
+index_bound = 0
 
 Do
-	Delay 50
-	count_wln = count_wln + 1
-	If count_wln > 50 Then 
-		WaitLoadingNew = 2
-		Exit Function
+	
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+
+
+//获取实体上界
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And 0 < EntityZ < SizeZ Then
+	index_bound = index
+	If index_bound > 1000 Then 
+		Exit Do
 	End If
-Loop While Plugin.Bkgnd.GetPixelColor(handle, 741, 502) = "FFFFFF"
-WaitLoadingNew = 0
+	
+Else 
+	Zero_Counter = Zero_Counter + 1
+End If
+
+
+Index = Index + 1
+
+If Zero_Counter > 1 Then 
+	
+	Delay 200
+	Exit Do
+End If
+
+
+Loop
+
+Delay 50
+
+TracePrint index_bound
+GetEntitySize = index_bound
+EntitySize = index_bound
+End Function
+
+Function DetectEntity(x1,x2,y1,y2,z1,z2)
+	
+
+
+Dim index, e_size
+e_size = Lib.CC.GetEntitySize()
+For index = 0 To e_size + 10
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+DetectEntity = 0
+If x1 < EntityX < x2 And y1 < EntityY < y2 And z1 < EntityZ < z2 Then 
+	TracePrint EntityID
+	DetectEntity = 1
+	Exit Function
+End If
+	
+Next
+
+	
+End Function
+
+Function DetectPpl(x1,x2,y1,y2,z1,z2)
+	
+
+
+Dim index, e_size
+e_size = Lib.CC.GetEntitySize()
+For index = 0 To e_size + 10
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+DetectPpl = 0
+If x1 < EntityX < x2 And y1  < EntityY < y2 And z1 < EntityZ < z2 And EntityType = 236 Then
+	DetectPpl = 1
+	TracePrint "Detected"
+	Exit Function
+End If
+	
+Next
+
+	
+End Function
+
+Function DetectPplFull()
+	
+
+
+Dim index, e_size
+e_size = Lib.CC.GetEntitySize()
+TracePrint e_size
+For index = 0 To e_size + 10
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+DetectPplFull = 0
+TracePrint EntityType
+If 0 < EntityX < SizeX And 0  < EntityY < SizeY And 0 < EntityZ < SizeZ And EntityType = 236 Then
+	DetectPplFull = 1
+	TracePrint "Detected"
+	Exit Function
+End If
+	
+Next
+
+	
+End Function
+
+Function ScanPpl
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+
+reset_time = 1
+
+
+Dim Index, Zero_Counter, Reset_Counter
+Index = 0
+Zero_Counter = 0
+index_bound = 0
+
+Do
+	
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+
+//获取实体上界
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ Or EntityType = 236 Then 
+	index_bound = index 
+	
+Else 
+	Zero_Counter = Zero_Counter + 1
+	
+End If
+
+
+ScanPpl = 0
+
+Index = Index + 1
+
+If Zero_Counter > 1 Then 
+	
+	Delay 200
+	Exit Do
+End If
+
+
+Loop
+
+Delay 100
+
+TracePrint index_bound
+
+For index = 0 To index_bound
+
+Call Lib.CC.GetEntityPos(Index)
+Call Lib.CC.GetEntityID(Index)
+
+//Collect
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And EntityType = 236 Then 
+	ScanPpl = ScanPpl + 1
+	TracePrint "Scanned"
+End If
+
+Next
+
+
 
 
 End Function

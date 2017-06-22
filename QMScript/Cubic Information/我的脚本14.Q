@@ -45,7 +45,7 @@ dm_ret = dm.FoobarDrawLine(foobar, 0, fooHght / 2, fooWide, fooHght / 2, "808080
 Call PrintCord(653, "FF00FF")
 Call PrintCord(652, "FF0000")
 Call PrintCord(651, "0000FF")
-Call PrintCord(233, "FFFF00")
+Call PrintCord(298, "FFFF00")
 
 //
 //For index = 377 To 388

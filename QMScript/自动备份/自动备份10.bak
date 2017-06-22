@@ -8,9 +8,9 @@ StopHotkey=123
 StopHotkeyMod=0
 RunOnce=1
 EnableWindow=
-MacroID=c672899a-cd83-4403-aff5-39eb4dc16f60
-Description=Item-Teleporter-4【世界级】【内存】
-Enable=1
+MacroID=34e47623-d421-4d2e-a1fb-ece9c7cfa68a
+Description=收获方块X【领域级】【测试中】
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0
@@ -27,21 +27,53 @@ UEsDBBQAAgAIAFwp/kaXgMERjQUAALwGAAAKABEAU2t5TWFwLmJtcFVUDQAH1rG5VdaxuVXWsblVXZXp
 
 
 [UIPackage]
-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
+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
 
 
 [Script]
 //UserVar WorldName = "WorldA" "世界名称"
 //WorldName = "WorldA"
 
-UserVar WorldName = DropList{"Eden":"WorldE"|"Tinker":"WorldT"|"Pelago":"WorldP"|"Spyre":"WorldS"|"Aspen":"WorldA"} "世界名称"
-
-
+UserVar ReapCases=DropList{"自定义":0|"大理石 579,585,586 ":1|"块石 133,220,235":2|"Rubber&Cotton":3}=2 "收获类型"
+UserVar ReapString = "127,147,143,220,235,223,228,240,372,466" "目标方块"
 BlockCount = 0
 
-BreakPoint = False
 
 Call Lib.CC.Initailize()
+Call Lib.CC.GetWorldSize()
+
+//转化不利的方块
+Call Lib.CC.ReplaceBlockAll(218, 138)
+Call Lib.CC.ReplaceBlockAll(222, 138)
+Call Lib.CC.ReplaceBlockAll(234, 138)
+
+
+
+
+
+Dim block, ReapArray
+Select Case ReapCases
+	Case 0
+		ReapArray = Split(ReapString,",")
+	Case 1
+		ReapArray = Array(579,585,586)
+	Case 2
+		ReapArray = Array(133,220,235)
+End Select
+
+//
+//Call Lib.CC.DetectPplFull()
+//EndScript
+
+For Each block In ReapArray
+
+Call Lib.CC.ReplaceBlockAll(block, 705)
+
+Next
+
+Call Lib.CC.ReapBlock(705, "down")
+
+EndScript
 
 //dm_ret = dm.BindWindowEx(handle, "dx2", "dx.mouse.position.lock.api|dx.mouse.position.lock.message", "dx", "", 0)
 dm_ret = dm.BindWindowEx(handle, "dx2", "dx.mouse.position.lock.api", "dx", "", 0)
@@ -104,61 +136,37 @@ End Sub
 
 
 Sub Hunt
-
+Dim index
 Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
 
+For index = 377 To 388
+	Call Lib.CC.ReapBlock(index, "down")
+Next
 
-Dim Key_Code
-Key_Code = 0
-Do
-Key_Code = GetLastKey()
-If Key_Code = 115  Then 
-	Exit Do
-End If
-If Key_Code = 117  Then 
-	Goto SkipHunting
-End If
-Delay 200
+For index = 405 To 416
+	Call Lib.CC.ReapBlock(index, "down")
+Next
 
-
-Loop
-
-
-Dim Index, Zero_Counter
-Index = 1
-Zero_Couner = 0
-
-Do
-	
-Call Lib.CC.GetEntityPos(Index)
-If EntityX <= 0 And EntityY <= 0 And EntityZ <= 0 Then 
-	Zero_Counter = Zero_Counter + 1
-Else 
-	Zero_Counter = 0
-	
-	If Int(EntityX) - EntityX = 0 And Int(EntityY) - EntityY = 0 And Int(EntityY) - EntityY = 0 Then 
-		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
-		Delay 200
-		dm.KeyPressChar "A"
-		
-		//dm.KeyPressChar "D"
-		//Delay 100
-		//dm.KeyPressChar "A"
-		//Delay 100
-		//dm.KeyPressChar "D"
-		//Delay 100
-		
-		
+For index = 618 To 629
+	If index = 621 Then 
+		Call Lib.CC.ReapBlockEx(index, "down")
+	Else
+		Call Lib.CC.ReapBlock(index, "down")
 	End If
-		
-End If
+Next
 
-If Zero_Counter > 3 Then 
-	Exit Do
-End If
+For index = 632 To 643
+	If index = 632 Then 
+		Call Lib.CC.ReapBlockEx(index, "down")
+	Else
+		Call Lib.CC.ReapBlock(index, "down")
+	End If
+Next
 
-Index = Index + 1
-Loop
+
+
+
 
 
 Rem SkipHunting
@@ -196,7 +204,9 @@ Function AdrToPos(adr, off)
 	AdrToPos = dm.ReadInt(handle,PStr,2)
 End Function
 
-
+Sub OnScriptExit
+	MessageBox BlockCount
+End Sub
 
 
 Function WaitLoadingNew()

@@ -53,6 +53,8 @@ Dim index
 acc_index = Kernel_Number
 
 
+
+
 Do
 Call ActivateAccount(acc_index)
 acc_index = acc_index + Kernel_Max

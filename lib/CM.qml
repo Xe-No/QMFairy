@@ -779,16 +779,20 @@ End Function
 
 
 Function ExecuteQuest(quest)
-Dim quest_array
+Dim quest_array, score
 quest_array = Split(quest, " ")
+score = 0
 
 For Each q In quest_array
 
-ExecuteQuestX (q)
+score = score + ExecuteQuestX(q)
 Delay 50
 	
 Next
 
+If score > 0 Then 
+	
+End If
 
 
 End Function
@@ -806,12 +810,16 @@ Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
 Call Lib.CC.SetCamera(0, 45)
 
+
+Dim result
 Select Case quest_type
 	Case "Mine"
-		Call Lib.CM.Mine(quest_target,quest_number)
+		result = Lib.CM.Mine(quest_target,quest_number)
 	Case "Craft"
-		Call Lib.CM.Craft(quest_target,quest_number)
+		result Lib.CM.Craft(quest_target,quest_number)
 End Select
+
+ExecuteQuestX = results
 
 Call TP_start
 
@@ -970,16 +978,23 @@ center_x = 15 + target_index * 4
 
 Call Lib.CC.GetWorldSize()
 
-Do
-	Delay 200
-Loop While Lib.CC.DetectPpl( center_x - 1.5, center_x + 1.5, 0, SizeY,  0, SizeZ )
 
-Call Lib.CC.ReplaceBlockAll(ReapArray(target_index), 705)
+If Lib.CC.DetectPpl(center_x - 1.5, center_x + 1.5, 0, SizeY, 0, SizeZ) = 1  Then 
+	Mine = 1
+	Exit Function
+End If
+//Do
+//	Delay 200
+//Loop While Lib.CC.DetectPpl( center_x - 1.5, center_x + 1.5, 0, SizeY,  0, SizeZ )
 
-Call Lib.CM.ReapBlockCount(705, "down", number)
 
-Call Lib.CC.ReplaceBlockAll(705, ReapArray(target_index))
+TracePrint AltsRoom_ReapLine_Bind( center_x, ReapArray, number)
+//Call Lib.CC.ReplaceBlockAll(ReapArray(target_index), 705)
+//Call Lib.CM.ReapBlockCount(705, "down", number)
+//Call Lib.CC.ReplaceBlockAll(705, ReapArray(target_index))
 
+
+Mine = 0
 End Function
 
 Function SendInfo(info, info_type)
@@ -994,7 +1009,7 @@ Call dm.FoobarPrintText(foobar, info, colorL(info_type))
 	
 End Function
 
-Function ReapBlockCount(Block_Want, Direction, num)
+Function ReapBlockCount(Block_Want, num)
 //2017-4-22 15:26:19
 //MessageBox num
 Call Lib.CC.GetSubAddress()
@@ -1022,15 +1037,15 @@ Dim array_count, index, temp
 array_count = UBound(addresses)
 
 
-If Direction = "up" Then 
-For index = 0 To Round(array_count / 2 - 0.1)
-	
-	temp = addresses(index)
-	addresses(index) = addresses(array_count - index)
-	addresses(array_count - index) = temp
-	
-Next
-End If
+//If Direction = "up" Then 
+//For index = 0 To Round(array_count / 2 - 0.1)
+//	
+//	temp = addresses(index)
+//	addresses(index) = addresses(array_count - index)
+//	addresses(array_count - index) = temp
+//	
+//Next
+//End If
 
 Dim block_count
 block_count = 0
@@ -1042,19 +1057,14 @@ For Each I In addresses
 	If block_type = block_type_want Then 
 		block_count = block_count + 1
 		If block_count - num > 0 Then 
+			ReapBlockCount = 0
 			Exit Function
 		End If
-		
 		
 		bx = Lib.CC.AdrToPos(I, 2)
 		by = Lib.CC.AdrToPos(I, 4)
 		bz = Lib.CC.AdrToPos(I, 6)
-		Select Case Direction
-			Case "up"
-			Call Lib.CC.MinePrecise(bx, by, bz, block_want)
-			Case "down"
-			Call Lib.CC.MinePreciseEx(bx, by, bz, block_want)
-		End Select
+		Call Lib.CC.MinePreciseEx(bx, by, bz, block_want)
 		
 			
 	End If
@@ -1064,6 +1074,62 @@ Next
 
 
 
+
+End Function
+
+Function AltsRoom_ReapLine_Bind(Central_X, ReapArray, ReapTotal)
+Dim reap_count, plat_z
+reap_count = 0
+plat_z = 99
+Call Lib.CC.TP(Central_X, 39, plat_z)
+
+
+For TarY = 40 To 5 Step  -1
+For TarZ = 97 To 99
+For TarX = Central_X - 1 To Central_X + 1
+	
+	If AltsRoom_Grab_Bind(TarX,TarY,TarZ, ReapArray) = 0 Then
+		reap_count = reap_count + 1
+		//MessageBox reap_count
+		Delay 200
+	End If
+	If reap_count - ReapTotal = 0 Then 
+		AltsRoom_ReapLine_Bind = 0
+		Exit Function
+	End If
+	
+Next
+Next
+Next
+
+End Function
+
+
+Function AltsRoom_Grab_Bind(TarX, TarY, TarZ, ReapArray)
+
+ReapArray = Array(138, 143, 220, 235, 147, 223, 127, 228, 230, 231, 240, 372)
+
+If Lib.CC.InArray(Lib.CC.ReadBlock(TarX, TarY, TarZ), ReapArray)  Then 
+	
+
+	Dim click_x, click_y, plat_z
+	click_x = 640
+	click_y = 480 + (TarZ - 100) * 60
+	plat_z = 99
+	BlockCount = BlockCount + 1
+	Call Lib.CC.TP(TarX, TarY + 1, plat_z)
+	Delay 200
+	Call Lib.CC.BindClick( click_x, click_y)
+	
+	Do
+		Delay 100
+	Loop While Lib.CC.InArray(Lib.CC.ReadBlock(TarX, TarY, TarZ), ReapArray) 
+	AltsRoom_Grab_Bind = 0
+	
+Else 
+	AltsRoom_Grab_Bind = 1
+End If
+TracePrint AltsRoom_Grab_Bind
 
 End Function
 

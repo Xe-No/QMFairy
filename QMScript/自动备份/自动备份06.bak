@@ -601,7 +601,8 @@ For index = 0 To Round(array_count / 2 - 0.1)
 Next
 End If
 
-
+Dim I, scan_count
+scan_count = 0
 For Each I In addresses
 	Dim block_ID, block_type, block
 	block_ID = Lib.CC.AdrToPos(I, 0)
@@ -931,7 +932,7 @@ Call Lib.CC.GetEntityID(Index)
 
 
 //获取实体上界
-If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ Or EntityType = 236 Then 
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And ( EntityType < 10  Or EntityType = 236 ) Then 
 	index_bound = index 
 	
 Else 
@@ -944,7 +945,7 @@ ScanPpl = 0
 
 Index = Index + 1
 
-If Zero_Counter > 1 Then 
+If Zero_Counter > 0 Then 
 	
 	Delay 200
 	Exit Do

@@ -119,11 +119,57 @@ Delay 1000
 
 End Function
 
+Function GetBlockPixel(BX,BY,BZ)
+
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetCamera()
+Call Lib.CC.GetCharPix()
+
+//定义单位：°
+Dim Deg, Pi, disCamChar, WHA, HHA, XHP, YHP
+Pi = 4 * Atn(1)
+Deg = Pi / 180
+
+//相机与人物距离
+
+DisCamChar = 22.5
+
+//游戏视角
+
+WHA = 0.341615	//宽半角
+HHA = 0.260602	//高半角
+
+//游戏分辨率
+
+XHP = 640	//x半分辨率
+YHP = 480 	//y半分辨率
+
+
+Dim dX,dY,dZ, dpox,dpoy, theta, phi
+
+dX = BX - CharX
+dY = BY - CharY
+dZ = BZ - CHarZ
+
+phi = Aizmu * Deg
+theta = Polar * Deg
+
+dpox = - dX * Cos( phi ) + dY * Sin( phi ) 
+dpoy = dX * Sin(phi) * Cos( theta ) + dY * Cos( phi ) * Sin( theta ) + dZ * Sin(Theta)
+	
+BlockPix = Atn( dpox / DisCamChar ) / WHA * XHP + CharPix
+BLockPiy = Atn( dpoy / DisCamChar ) / HHA * YHP + CharPiy
+
+
+End Function
+
 Function GetCursorBlockPos(pass_num)
 
 Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
 Call Lib.CC.GetCamera()
+
 
 //定义单位：°
 Dim Deg, Pi, disCamChar, WHA, HHA, XHP, YHP

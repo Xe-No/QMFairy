@@ -31,7 +31,7 @@ Call Lib.CC.GetWorldSize()
 Call Lib.CC.GetCharPosInt()
 
 
-Call RunApp("D:\GameData\CC\TextRecognition\CCTR.wls")
+//Call RunApp("D:\GameData\CC\TextRecognition\CCTR.wls")
 Call Refill()
 Call RefillEx()
 
@@ -123,14 +123,18 @@ Dim dx, dy
 
 Call Lib.CC.SetCamera(0, 45)
 Call Lib.CC.GetCharPos()
-dx = (target_x - CharX) * 80
-dy = (target_y - CharY) * + 60  + (target_z - CharZ) * 60 - 120
-TracePrint dy
-Delay 30
+//dx = (target_x - CharX) * 80
+//dy = (target_y - CharY) * - 60  + (target_z - CharZ) * -60 - 120
+//TracePrint dy
+//Delay 30
 
 CCount = 0
 Call Lib.CC.WriteBlock(target_x, target_y - 1, target_z, 324)
-Call Lib.CC.BindClick(640 + dx , 480 + dy)
+
+
+Call Lib.CM.GetBlockPixel(target_x, target_y, target_z)
+TracePrint BlockPiy
+Call Lib.CC.BindClick(BlockPix, BlockPiy + 60)
 While Lib.CC.ReadBlock(target_x, target_y, target_z) = 0
 	CCount = CCount + 1
 	Delay 30

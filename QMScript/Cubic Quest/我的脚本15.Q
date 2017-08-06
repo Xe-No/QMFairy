@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=935cb68d-5490-4e4f-9065-e45def4d3a3e
 Description=alts quest new 1
-Enable=0
+Enable=1
 AutoRun=0
 [Repeat]
 Type=0
@@ -57,7 +57,7 @@ acc_index = Kernel_Number
 
 Do
 Call ActivateAccount(acc_index)
-acc_index = acc_index + Kernel_Max
+acc_index = acc_index + 1
 TracePrint acc_index
 Loop
 
@@ -67,20 +67,48 @@ Function ActivateAccount(index)
 
 path = "C:\Users\Administrator\Documents\DmRes\AltsState.log"
 
+
 incar = Lib.文件.读取指定行文本内容(path, index)
+If incar = "" Then 
+	ExitScript
+End If
+
 incar = Split(incar, "|")
 alt_name = incar(0)
 alt_password = incar(1)
 
 
-If alt_name = "" Then 
-	ExitScript
+If CheckAccount(alt_name) Then 
+	
+	result = Lib.CM.ActivateQuest(alt_name, alt_password)
+	TracePrint result
+	
 End If
 
 
-result = Lib.CM.ActivateQuest(alt_name, alt_password)
-
-TracePrint result
 
 
+
+End Function
+
+Function CheckAccount(alt_name)
+
+Dim path2, fso, f
+path2 = "C:\Users\Administrator\Documents\DmRes\AltsComplete.log"
+
+Set fso = CreateObject("Scripting.FileSystemObject")
+Set f = fso.OpenTextFile(path2, 1)
+
+Dim alt_list
+alt_list = Split(f.ReadAll,vbCrLf)
+
+If Lib.CC.InArray(alt_name, alt_list) Then 
+	CheckAccount = False
+Else 
+	CheckAccount = True
+	Set f = fso.OpenTextFile(path2, 8, True)
+	f.WriteLine alt_name
+End If
+f.close
+	
 End Function

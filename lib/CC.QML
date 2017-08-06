@@ -541,7 +541,7 @@ Function InArray(Element, Array)
 
 Dim index
 For Each index In Array
-	If index - Element = 0 Then 
+	If index = Element Then 
 		InArray = True
 		Exit For
 	Else 

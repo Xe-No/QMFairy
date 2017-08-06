@@ -8,9 +8,9 @@ StopHotkey=123
 StopHotkeyMod=0
 RunOnce=1
 EnableWindow=
-MacroID=5b69020d-68c4-4373-8fa5-f016de966ee8
-Description=Place-AltsRoomRefill
-Enable=1
+MacroID=073db54b-8142-402a-99d7-3956699b234f
+Description=alts quest new 4
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0
@@ -23,226 +23,145 @@ SetupOCXFile=
 [Comment]
 
 [Script]
+//小号任务状态写入测试
+
+UserVar Kernel_Number = 1 "核心编号"
+UserVar Kernel_Max = 4 "核心总数"
+
+
 Call Lib.CC.Initailize()
-dm_ret = dm.BindWindow(handle, "dx2", "dx2", "dx", 0)
-
-Delay 1000
-Call Lib.CC.GetWorldSize()
-Call Lib.CC.GetCharPosInt()
-
-
-Call RunApp("D:\GameData\CC\TextRecognition\CCTR.wls")
-Call Refill()
-Call RefillEx()
-
-//Call ReapItem()
-Sub OnScriptExit
-	dm_ret = dm.UnBindWindow()
-	
-End Sub
-
-
-
-Function Refill()
-
-plat_z = 99
-Position_Array = Array(440,500,560,720,780,840,900)
-Start_X = 15 
-For Index = 0 To 6
-
-Call Lib.CC.BindClick( Position_Array(Index), 929)
-
-Call PlaceBlock_Row(Start_X + 4 * Index) 
-
-Next
-
-End Function
-
-Function RefillEx()
-
-plat_z = 99
-Position_Array = Array(440,500,560,720,780,840,900)
-Start_X = 43
-
-//点击下拉框
-Call Lib.CC.CubicClick(handle,640,945)
+IsBind = dm.BindWindow(handle, "dx2", "dx2", "dx", 0)
 Delay 500
+Dm.SetPath "C:\Users\Administrator\Documents\DmRes"'大漠全局路径设置
+dm.WriteFile  "ScriptLog\" &  "Alts.txt",   "[" & Date & "]" & "Start Log" & vbCrLf
 
-For j = 0 To 4
+
+//初始化窗口
+fooX1 = 100
+fooY1 = 400
+foobar = dm.CreateFoobarCustom(handle, fooX1, fooY1, "UI2.bmp", "FF00FF", 1.0)
+////////////////////
+Call Lib.CM.SendInfo("Script Initialized", 1)
+
+If IsBind = 1 Then 
+	TracePrint IsBind
+	Call Lib.CM.SendInfo("Window Binded", 1)
+End If
 	
-	pix0 = 412
-	piy0 = 732
+Dim index	
+acc_index = Kernel_Number
 
-	//背包栏间隔
-	inter = 64
-	//初始坐标
-
-	x = j mod 8
-	y = j \ 8
-	pix = pix0 + inter * x
-	piy = piy0 + inter * y
-	
-	Call Lib.CC.CubicClick(handle, pix, piy)
-	
-	Call PlaceBlock_Row(Start_X + 4 * j) 
-Next
-
-End Function
-
-//---------------------
-Function PlaceBlock_Row(central_x)   //外部变量 plat_z
-Dim tarX, tarY, tarZ
+Do
+Call ActivateAccount(acc_index)
+acc_index = acc_index + Kernel_Max
+TracePrint acc_index
+Loop
 
 
-For tarY = 5 To 38 Step 1
-For tarX = central_x - 1 To central_x + 1
 
-trigger = 0
-For tarZ = 99 To 97  Step -1
-	If Lib.CC.ReadBlock(tarX, tarY, tarZ) = 0 Then 
-		Call Lib.CC.TP(tarX, tarY + 1, plat_z)
-		Call PlaceBlock(tarX, tarY, tarZ)
-		trigger = 1
-		Delay 30
-	End If
-Next
-If trigger = 1 Then
-	dm.KeyPressChar "W"
-	Delay 200
+Function ActivateAccount(index)
+
+path = "C:\Users\Administrator\Documents\DmRes\AltsState.log"
+
+incar = Lib.文件.读取指定行文本内容(path, index)
+incar = Split(incar, "|")
+alt_name = incar(0)
+alt_password = incar(1)
+alt_time = incar(2)
+alt_state = incar(3)
+
+If alt_name = "" Then 
+	ExitScript
 End If
 
 
-Next
-Next
+result = Lib.CM.ActivateQuest(alt_name, alt_password)
 
-End Function
-
-
-Function PlaceBlock(target_x, target_y, target_z)
-Dim dx, dy
-
-Call Lib.CC.SetCamera(0, 45)
-Call Lib.CC.GetCharPos()
-dx = (target_x - CharX) * 80
-dy = (target_y - CharY) * + 60  + (target_z - CharZ) * 60 - 120
-TracePrint dy
-Delay 30
-
-CCount = 0
-Call Lib.CC.WriteBlock(target_x, target_y - 1, target_z, 324)
-Call Lib.CC.BindClick(640 + dx , 480 + dy)
-While Lib.CC.ReadBlock(target_x, target_y, target_z) = 0
-	CCount = CCount + 1
-	Delay 30
-
-Wend
+TracePrint result
 
 
 End Function
-
-//-------------------------------
-
-//Function PlaceBlock_Row(central_x)   //外部变量 plat_z
-//Dim tarX, tarY, tarZ
-//Call Lib.CC.SetCamera(180, 45)
+//Function ActivateQuest(alt_name,alt_password)
 //
-//For tarY = 38 To 5 Step - 1 
+//	If Lib.CC.GetAccState( alt_name ) = 1 Then 
+//		Call Lib.CM.SendInfo(alt_name & " malfunctioned ! >_< Skipping ", 0)
+//		Goto Pass
+//	End If
 //
-//For tarX = central_x - 1 To central_x + 1
-//trigger = 0
-//
-//
-//For tarZ = 99 To 97  Step -1
-//
-//	If Lib.CC.ReadBlock(tarX, tarY, tarZ) = 0 Then 
-//		Call Lib.CC.TPT(tarX, tarY - 1, plat_z)
-//		Call PlaceBlock(tarX, tarY, tarZ)
-//		trigger = 1
-//		Delay 50
+//	
+//	Call Login(alt_name, alt_password)
+//	//Call Lib.CM.SendInfo("Loading...", 2)
+//	Call Lib.CM.WaitLoading
+//	Call Lib.CC.GetSubAddress()
+//	
+//	Delay 200
+//	
+//	Call TP_Start()
+//	
+//	If IsAltsWorld Then 
+//		Call Lib.CM.SendInfo("Alts room verified ! >:3", 1)
+//	Else 
+//		Call Lib.CM.SendInfo("Alts room not verified , attempting to tp Master ", 3)
+//		Delay 100
+//		Call Lib.CM.SendInfo(      TP_BOSS()        , 1)
+//		Delay 1000
+//		Call Lib.CM.WaitLoading
+//		If IsAltsWorld Then 
+//		
+//			Call Lib.CM.SendInfo("Alts room verified ! >:3", 1)
+//		
+//		Else 
+//			Call Lib.CM.SendInfo("Alts room still not verified , quest aborted :Q:", 3)
+//			Error_String = Error_String & alt_name &  " : Not in Room"   & Chr(13)
+//			Goto Before_Logout
+//			
+//		End If
 //	End If
 //
 //
-//Next
-//If trigger = 1 Then
-//	dm.KeyPressChar "W"
-//	Delay 200
-//End If
-//Next
-//Next
+//
+//	If IsAltsWorld Then 
+//	dm_ret = dm.FoobarPrintText(foobar, "Alts room verified ! >:3", "FF0000")
+//	
+//	Else 
+//			dm_ret = dm.FoobarPrintText(foobar, "Alts room not verified , quest aborted :Q:", "FF7F00")
+//			Error_String = Error_String & alt_name &  " : Not in Room"   & Chr(13)
+//			Goto Before_Logout
+//			
+//	End If
+//	
+//	Delay Time_Sub
+//	Call Lib.CM.SendInfo("Quest checking...", 2)
+//	Quest_Checked = CheckQuest()
+//	
+//	If Quest_Checked = "Invalid Quest" Then 
+//		Call Lib.CM.SendInfo("Invalid Quest", 3)
+//		dm.WriteFile  "ScriptLog\" & Date & "Alts.txt", alt_name & " : Invalid Quest" & Chr(13)
+//		Error_String = Error_String & alt_name & " : Invalid Quest" & Chr(13)
+//		Goto Before_Logout
+//	Else
+//		Call Lib.CM.SendInfo("Quest " & Quest_Checked & " detected ", 0)
+//	End If
+//	
+//	
+//	Call ExecuteQuest(Quest_Checked)
+//
+//	Call Lib.CM.SendInfo(EvaluateQuest, 1)
+//	
+//	
+//	
+//	Rem Before_Logout
+//	
+//	Call Lib.CM.DropItem()
+//	
+//	Delay 300
+//	
+//	Call Logout
+//	Call Lib.CM.SendInfo(alt_name & " deactivated !", 0)
+//	
+//	Rem Pass
+//	
+//Rem PassLogin	
 //
 //End Function
-
-Function ReapItem
-Dim Index, Zero_Counter, TargetType, TargetID, Reset_Counter
-Index = 1
-Zero_Counter = 0
-TargetType = 3
-TargetID = 0
-Reset_Counter = 0
-Do
-	
-Call Lib.CC.GetEntityPos(Index)
-Call Lib.CC.GetEntityID(Index)
-
-//If 1 < EntityX < SizeX And 1  < EntityY < SizeY And 1  < EntityZ < SizeZ And 94 <= EntityID <= 99 Then 
-
-If 1 < EntityX < SizeX And 1 < EntityY < SizeY And 1 < EntityZ < SizeZ Then 
-
-	Zero_Counter = 0
-	
-	Dim block
-	block = Lib.CC.ReadBlock( round(EntityX) , round(EntityY) , round(EntityZ)  )
-	
-	If block <> 140 Then 
-		Call Lib.CC.GetCharPos() 
-		Call Lib.CC.GetEntityPos(Index)
-		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
-		dm.KeyPressChar "W"
-//		dm.WaitKey 115, 0
-		Delay dt
-	End If
-
-Else 
-	Zero_Counter = Zero_Counter + 1
-
-End If
-
-
-Index = Index + 1
-
-If Zero_Counter > 256 Then 
-	Index = 1
-	Reset_Counter = Reset_Counter + 1
-End If
-
-If Reset_Counter > 10 Then 
-	Exit Do
-End If
-
-Loop
-
-Scan = 1
-End Function
-
-
-//Function PlaceBlock(target_x, target_y, target_z)
-//Dim dx, dy, tblo
 //
-//Call Lib.CC.SetCamera(180, 45)
-//Call Lib.CC.GetCamPos()
-//dx = - (target_x - CamX) * 80
-//dy = - (target_y - CamY) * 60 + (target_z - CamZ) *60  - 60 
-//
-//
-//CCount = 0
-//tblo = Lib.CC.ReadBlock(target_x, target_y + 1, target_z)
-//Call Lib.CC.WriteBlock(target_x, target_y + 1, target_z, 324)
-//Call Lib.CC.CubicClick(handle, 640 + dx , 480 + dy)
-//While Lib.CC.ReadBlock(target_x, target_y, target_z) = 0
-//	CCount = CCount + 1
-//	Delay 20
-//
-//Wend
-//Call Lib.CC.WriteBlock(target_x, target_y + 1, target_z, tblo)
-//
-//End Function

@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=5b69020d-68c4-4373-8fa5-f016de966ee8
 Description=Place-AltsRoomRefill
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0
@@ -103,7 +103,7 @@ For tarZ = 99 To 97  Step -1
 		Call Lib.CC.TP(tarX, tarY + 1, plat_z)
 		Call PlaceBlock(tarX, tarY, tarZ)
 		trigger = 1
-		Delay 30
+		Delay 50
 	End If
 Next
 If trigger = 1 Then

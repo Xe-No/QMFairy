@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=c672899a-cd83-4403-aff5-39eb4dc16f60
 Description=Item-Teleporter-4【世界级】【内存】
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0

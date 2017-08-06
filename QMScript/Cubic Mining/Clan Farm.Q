@@ -79,7 +79,6 @@ Goto FarmStart
 Function FarmPlane(TarZ)
 
 TarY = 1
-TarZ = 69
 
 For SizeY - 1
 	Call Lib.CC.GetCharPos()

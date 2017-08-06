@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=fdaa9bcf-c991-4346-bfce-b9c75957ec7e
 Description=EntityTeleporter
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0

@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=62254006-ea18-42f9-9078-ebd29549835b
 Description=—∞’“CaveArt&Fossil
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0

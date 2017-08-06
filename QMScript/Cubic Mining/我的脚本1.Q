@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=b2a4312d-3c20-42bf-a1ea-e536d8c76c0f
 Description=采集特定多种方块【世界级】A
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0

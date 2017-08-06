@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=3bae4c7e-e1c5-4842-b2d9-e766ffb540b3
 Description=*考古2号【世界级】【内存】1
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0

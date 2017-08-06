@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=5b69020d-68c4-4373-8fa5-f016de966ee8
 Description=Place-AltsRoomRefill
-Enable=0
+Enable=1
 AutoRun=0
 [Repeat]
 Type=0
@@ -23,9 +23,6 @@ SetupOCXFile=
 [Comment]
 
 [Script]
-
-
-
 Call Lib.CC.Initailize()
 dm_ret = dm.BindWindow(handle, "dx2", "dx2", "dx", 0)
 
@@ -34,10 +31,10 @@ Call Lib.CC.GetWorldSize()
 Call Lib.CC.GetCharPosInt()
 
 
-
+//Call RunApp("D:\GameData\CC\TextRecognition\CCTR.wls")
 Call Refill()
 Call RefillEx()
-Call RunApp("D:\GameData\CC\TextRecognition\CCTR.wls")
+
 //Call ReapItem()
 Sub OnScriptExit
 	dm_ret = dm.UnBindWindow()
@@ -92,37 +89,92 @@ Next
 
 End Function
 
-
-
+//---------------------
 Function PlaceBlock_Row(central_x)   //外部变量 plat_z
 Dim tarX, tarY, tarZ
-Call Lib.CC.SetCamera(180, 45)
 
-For tarY = 38 To 5 Step - 1 
 
+For tarY = 5 To 38 Step 1
 For tarX = central_x - 1 To central_x + 1
+
 trigger = 0
-
-
 For tarZ = 99 To 97  Step -1
-
 	If Lib.CC.ReadBlock(tarX, tarY, tarZ) = 0 Then 
-		Call Lib.CC.TPT(tarX, tarY - 1, plat_z)
+		Call Lib.CC.TP(tarX, tarY + 1, plat_z)
 		Call PlaceBlock(tarX, tarY, tarZ)
 		trigger = 1
-		Delay 50
+		Delay 30
 	End If
-
-
 Next
 If trigger = 1 Then
 	dm.KeyPressChar "W"
 	Delay 200
 End If
+
+
 Next
 Next
 
 End Function
+
+
+Function PlaceBlock(target_x, target_y, target_z)
+Dim dx, dy
+
+Call Lib.CC.SetCamera(0, 45)
+Call Lib.CC.GetCharPos()
+//dx = (target_x - CharX) * 80
+//dy = (target_y - CharY) * - 60  + (target_z - CharZ) * -60 - 120
+//TracePrint dy
+//Delay 30
+
+CCount = 0
+Call Lib.CC.WriteBlock(target_x, target_y - 1, target_z, 324)
+
+
+Call Lib.CM.GetBlockPixel(target_x, target_y, target_z)
+TracePrint BlockPiy
+Call Lib.CC.BindClick(BlockPix, BlockPiy + 60)
+While Lib.CC.ReadBlock(target_x, target_y, target_z) = 0
+	CCount = CCount + 1
+	Delay 30
+
+Wend
+
+
+End Function
+
+//-------------------------------
+
+//Function PlaceBlock_Row(central_x)   //外部变量 plat_z
+//Dim tarX, tarY, tarZ
+//Call Lib.CC.SetCamera(180, 45)
+//
+//For tarY = 38 To 5 Step - 1 
+//
+//For tarX = central_x - 1 To central_x + 1
+//trigger = 0
+//
+//
+//For tarZ = 99 To 97  Step -1
+//
+//	If Lib.CC.ReadBlock(tarX, tarY, tarZ) = 0 Then 
+//		Call Lib.CC.TPT(tarX, tarY - 1, plat_z)
+//		Call PlaceBlock(tarX, tarY, tarZ)
+//		trigger = 1
+//		Delay 50
+//	End If
+//
+//
+//Next
+//If trigger = 1 Then
+//	dm.KeyPressChar "W"
+//	Delay 200
+//End If
+//Next
+//Next
+//
+//End Function
 
 Function ReapItem
 Dim Index, Zero_Counter, TargetType, TargetID, Reset_Counter
@@ -177,24 +229,24 @@ Scan = 1
 End Function
 
 
-Function PlaceBlock(target_x, target_y, target_z)
-Dim dx, dy, tblo
-
-Call Lib.CC.SetCamera(180, 45)
-Call Lib.CC.GetCamPos()
-dx = - (target_x - CamX) * 80
-dy = - (target_y - CamY) * 60 + (target_z - CamZ) *60  - 60 
-
-
-CCount = 0
-tblo = Lib.CC.ReadBlock(target_x, target_y + 1, target_z)
-Call Lib.CC.WriteBlock(target_x, target_y + 1, target_z, 324)
-Call Lib.CC.CubicClick(handle, 640 + dx , 480 + dy)
-While Lib.CC.ReadBlock(target_x, target_y, target_z) = 0
-	CCount = CCount + 1
-	Delay 20
-
-Wend
-Call Lib.CC.WriteBlock(target_x, target_y + 1, target_z, tblo)
-
-End Function
+//Function PlaceBlock(target_x, target_y, target_z)
+//Dim dx, dy, tblo
+//
+//Call Lib.CC.SetCamera(180, 45)
+//Call Lib.CC.GetCamPos()
+//dx = - (target_x - CamX) * 80
+//dy = - (target_y - CamY) * 60 + (target_z - CamZ) *60  - 60 
+//
+//
+//CCount = 0
+//tblo = Lib.CC.ReadBlock(target_x, target_y + 1, target_z)
+//Call Lib.CC.WriteBlock(target_x, target_y + 1, target_z, 324)
+//Call Lib.CC.CubicClick(handle, 640 + dx , 480 + dy)
+//While Lib.CC.ReadBlock(target_x, target_y, target_z) = 0
+//	CCount = CCount + 1
+//	Delay 20
+//
+//Wend
+//Call Lib.CC.WriteBlock(target_x, target_y + 1, target_z, tblo)
+//
+//End Function

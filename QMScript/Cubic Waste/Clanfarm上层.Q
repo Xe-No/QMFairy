@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=5dccd72a-334c-4e77-b5f8-888cccbcd523
 Description=Clanfarm…œ≤„
-Enable=0
+Enable=1
 AutoRun=0
 [Repeat]
 Type=0

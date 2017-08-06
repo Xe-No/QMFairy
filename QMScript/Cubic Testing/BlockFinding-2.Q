@@ -35,6 +35,17 @@ Call Lib.CC.Initailize()
 Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
 
+
+
+GetCursorPos MX, MY
+Array_Rect =Split( 	Plugin.Window.GetClientRect(handle)	, "|") 
+//下面这句将字符串转换成数值   
+L = Clng(Array_Rect(0)): T = Clng(Array_Rect(1))   
+R = Clng(Array_Rect(2)) : B = Clng(Array_Rect(3))
+
+bomb_x = mx - L
+bomb_y = my - T
+
 Block_Count = 0
 
 For Each Block In Reap_Array
@@ -50,26 +61,52 @@ For Each Block In Reap_Array
         bx = Lib.CC.AdrToPos(I, 2)
         by = Lib.CC.AdrToPos(I, 4)
         bz = Lib.CC.AdrToPos(I, 6)
-	
-        If Lib.CC.ReadBlock(bx, by, bz) - Block = 0 Then 
+		
+		
+        If Lib.CC.ReadBlock(bx, by, bz) = Block  Then 
         Else
             Goto Skip
         End If
 	
  		Lib.CC.SetCamera 0, 89
-
-        Lib.CC.WriteBlock bx, by, bz-1, 401
-        For dz = 30 To bz - 2
-        For dx = bx - 2 To bx + 2
-        For dy = by - 2 To by + 2
-            Lib.CC.WriteBlock dx, dy, dz, 0
+		
+		//设置爆炸点
+		
+		Do
+			bz = bz - 1
+		Loop While Lib.CC.InArray(Lib.CC.ReadBlock(bx, by, bz - 1), Reap_Array)
+        
+        //清空爆炸点附近方块
+        
+        For dz = -10 To 0 
+        For dx = - 2 To + 2
+        For dy = - 2 To + 2
+        	If (dx = 0) And (dy = 0) And (dz = 0) Then 
+        	Else
+        		Lib.CC.WriteBlock bx + dx, by + dy, bz + dz, 0
+        	End If
+            	
+            	
         Next
 		Next
 		Next
 		
-        Lib.CC.WriteBlock bx, by-1, bz-2, 0
-        Lib.CC.TP bx, by, bz - 2
+		Lib.CC.WriteBlock bx, by-1, bz  , 401
+        Lib.CC.WriteBlock bx, by-1, bz-1, 0
+        Lib.CC.TP bx, by - 1, bz - 1
+        
+        If Lib.CC.ReadBlock(bx, by, bz) <> 0 Then 
+        	Grab 
+      		Delay 1000
+      		Lib.CC.TP bx, by - 1, bz - 1
+        End If
+        
+        Boom 
+        Delay 1000
+        Lib.CC.TP bx + 2.3, by + 2.3 , bz - 1
         dm.WaitKey 115, 0
+        
+        
 //        Lib.CC.WriteBlock bx, by, bz - 5, 650
 //        Lib.CC.TP bx, by, bz - 6
 //        Delay 200
@@ -111,4 +148,14 @@ Sub DrawCharPos
 End Sub
 
 
+Function Grab()
+	Call Lib.CC.CubicClick(handle,378,935)
+	Delay 500
+	Call Lib.CC.CubicClick(handle,640,540)
+End Function
 
+Function Boom()
+	Call Lib.CC.CubicClick(handle,496,930)
+	Delay 500
+	Call Lib.CC.CubicClick(handle,640,540)
+End Function

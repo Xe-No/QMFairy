@@ -97,7 +97,7 @@ For SizeY - 1
 				Delay TeleWait
 				BlockCount = BlockCount + 1
 				返回值 = Lib.CC.WriteBlock(TarX, TarY-1, TarZ, 0)
-				返回值 = Lib.CC.TP(TarX, TarY -1,TarZ)
+				返回值 = Lib.CC.TPEx(TarX, TarY -1,TarZ-1)
 				Delay TeleWait2
 				
 				CCount = 0

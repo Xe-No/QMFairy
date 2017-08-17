@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=d887c1cc-ecc5-4d56-b0b5-5b7799424fa5
 Description=后台连点
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0

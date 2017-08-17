@@ -8,9 +8,9 @@ StopHotkey=123
 StopHotkeyMod=0
 RunOnce=1
 EnableWindow=
-MacroID=34cb4e22-ce60-4bfd-9568-22fd853990f5
-Description=探索传送门
-Enable=0
+MacroID=b2a4312d-3c20-42bf-a1ea-e536d8c76c0f
+Description=通用型野外采集脚本
+Enable=1
 AutoRun=0
 [Repeat]
 Type=0
@@ -23,167 +23,518 @@ SetupOCXFile=
 [Comment]
 
 [Script]
-//探索传送门
+//UserVar WorldName = "WorldA" "世界名称"
+//WorldName = "WorldA"
+UserVar MineRange = DropList{"世界级":"世界级"|"领域级":"领域级"} "采集等级"
+UserVar WorldName = DropList{"Eden":"WorldE"|"Tinker":"WorldT"|"Pelago":"WorldP"|"Spyre":"WorldS"|"Aspen":"WorldA"} "世界名称"
+UserVar ReapCases=DropList{"自定义":0|"大理石 579,585,586 ":1|"块石 133,220,235":2|"精灵":3|"树木":4|"宝石":5}=2 "收获类型"
+UserVar ReapString = "221" "目标方块"
+
+Dim block, ReapArray
+
+Select Case ReapCases
+	Case 0
+		ReapArray = Split(ReapString,",")
+	Case 1
+		ReapArray = Array(579,585,586)
+	Case 2
+		ReapArray = Array(133, 220, 235)
+	Case 3
+		ReapArray = Array(371, 374)
+	Case 4
+		ReapArray = Array(221, 217, 224, 227, 229)
+	Case 5
+		ReapArray = Array(651, 652, 653)
+		
+End Select
+
+BlockCount = 0
+
+
 Call Lib.CC.Initailize()
+
+Call Lib.CC.DMBind(handle)
+
+//Call Lib.CC.CollectItemNear()
+//
+//EndScript
+
+Rem Start
+
+Randomize
+
+Select Case MineRange
+Case "世界级"
+
+Do
+
+World_Index = Round( Rnd() * 5 ) 
+
+If TPMine(WorldName, World_Index) = 0 Then 
+	World_Index = World_Index + 1
+Else	
+	World_Index = Round( Rnd() * 5 ) 
+	Goto Skip
+End If
+JumpForward
+WaitLoading
+
+Hunt
+
+Leave
+WaitLoading
+Delay 1500
+
+Rem Skip
+
+Loop
+
+Case "领域级"
+
+Hunt 
+
+End Select
+
+
+Sub Hunt
+Dim index
+Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntitySize()
 
-
-//初始化窗口
-fooX1 = 50
-fooY1 = 660
-fooWide = SizeX * 4 + 1
-fooHght = SizeY * 4 + 1
-//fooWide = 241
-//fooHght = 241
-foobar = dm.CreateFoobarRect(handle, fooX1, fooY1, fooWide, fooHght)
-Delay 100
-dm_ret = dm.FoobarDrawLine(foobar, fooWide/2, 0, fooWide/2, fooHght, "808080", 0, 1)
-dm_ret = dm.FoobarDrawLine(foobar, 0, fooHght / 2, fooWide, fooHght / 2, "808080", 0, 1)
+GemArray = Array(651, 652, 653)
+BushArray = Array(238, 241, 243, 245, 251)
+TreeArray = Array(221, 217, 224, 227, 229)
+FairyArray = Array(371, 374)
+AppendArray = Array(236, 237, 228, 372)
 
 
 
-Call PrintCord(653, "FF00FF")
-Call PrintCord(652, "FF0000")
-Call PrintCord(651, "0000FF")
-Call PrintCord(298, "FFFF00")
 
-//
-//For index = 377 To 388
-//	Call PrintCord(index, "ffff00")
-//Next
-//
-//For index = 405 To 416
-//	Call PrintCord(index, "ffff00")
-//Next
-//
-//For index = 618 To 629
-//	Call PrintCord(index, "ffff00")
-//Next
-//
-//For index = 632 To 643
-//	Call PrintCord(index, "ffff00")
-//Next
-//
+//宝石
+Call BoomBlock(GemArray)
 
 
-Call ScanEgg
-While 0=0
-	Call DrawCharPos
-	dm_ret = dm.FoobarUpdate(foobar)
-	Delay 500
-Wend
+Dim block
 
-Function PrintCord(block, rgb)
-
-Dim addr
-addr = Lib.CC.FindBlock(block)
-Block_Count = 0
-addr_list = Split(addr, "|")
-
-For Each site In addr_list
-	bx = Lib.CC.AdrToPos(site, 2)
-	by = Lib.CC.AdrToPos(site, 4)
-	bz = Lib.CC.AdrToPos(site, 6)
-	dm_ret = dm.FoobarFillRect(foobar, 4 * BX + 1, 4 * BY + 1, 4 * BX + 4, 4 * BY + 4, rgb)//标出坐标
-	Block_Count = Block_Count + 1
-	
+For Each block In AppendArray
+	Call Lib.CC.ReplaceBlockAll(block, 705)
 Next
 
-//MessageBox Block_Count
+
+For Each block In ReapArray
+TracePrint block
+If Lib.CC.InArray(block, TreeArray) Then
+	Call Lib.CC.ReplaceBlockAll(block, 704)		//树木方块
+ElseIf Lib.CC.InArray(block, FairyArray) Then
+	Call Lib.CC.ReplaceBlockAll(block, 702)		//精灵方块	
+ElseIf Lib.CC.InArray(block, GemArray)
+	Call Lib.CC.ReplaceBlockAll(block, 701)//宝石方块
+Else 
+	Call Lib.CC.ReplaceBlockAll(block, 705)
+End If
+
+
+
+
+Next
+
+//转化不利的方块
+Call Lib.CC.ReplaceBlockAll(218, 138)
+Call Lib.CC.ReplaceBlockAll(222, 138)
+Call Lib.CC.ReplaceBlockAll(250, 138)
+Call Lib.CC.ReplaceBlockAll(234, 138)
+Call Lib.CC.ReplaceBlockAll(240, 138)
+Call Lib.CC.ReplaceBlockAll(230, 138)
+
+
+Call Lib.CC.ReapBlock(704, "up")
+Call ReapBlock_Fairy(702)
+Call Lib.CC.ReapBlock(705, "up")
+
+
+
+Rem SkipHunting
+
+Delay 100
+End Sub
+
+
+Function TPMine(WorldName, MineIndex)
+Dim MyString, MyArray
+MinePos = Lib.文件.读取指定行文本内容("C:\Users\Administrator\Documents\DmRes\" & WorldName & ".txt",MineIndex)
+If MinePos = "" Then 
+//EndScript
+	TPMine = 1
+Else 
+	MyString = Split(MinePos, ",", - 1 , 1)
+	MineX = CSng(MyString(0))
+	MineY = CSng(MyString(1))
+	MineZ = CSng(MyString(2))
+	
+	Call Lib.CC.TP(MineX, MineY, MineZ)
+	Delay 1000
+	TPMine = 0
+End If
+	
 	
 End Function
 
 
+Sub JumpForward
+
+Dim  ty
+Call Lib.CC.GetCharPos()
+ty = CharY
+
+Delay 200
+dm.KeyDownChar "W"
+Delay 16
+dm.KeyDownChar "Space"
+Delay 219
+dm.KeyUpChar "Space"
+Delay 31
+dm.KeyUpChar "W"
+Delay 1000
+
+Call Lib.CC.GetCharPos()
+
+If Abs(ty - CharY) < 0.7 Then 
+	Goto Skip
+End If
+
+End Sub
+
+Sub Leave
+
+Dim addr,addr_lst,x,y,z
+addr_lst = Lib.CC.FindBlock(10)
+addr_lst = Split(addr_lst, "|")
+
+For Each addr In addr_lst
+
+x = Lib.CC.AdrToPos(addr, 2)
+y = Lib.CC.AdrToPos(addr, 4)
+z = Lib.CC.AdrToPos(addr, 6)
+
+
+If x = 50 And y = 50 Then 
+	Call Lib.CC.TPP(x, y + 0.5, z)
+	Exit For
+End If
+
+
+
+	
+Next
+
+Delay 500
+dm.KeyDownChar "W"
+Delay 800
+dm.KeyUpChar "W"
+
+
+
+TracePrint "Leave"
+End Sub
+
+
+Sub WaitInnerWorld
+
+Do
+Delay 1000
+Loop Until Lib.CC.GetGameState() = "Realm"
+
+End Sub
+
+
+Sub WaitOverWorld
+
+Do
+Delay 1000
+Loop Until Lib.CC.GetGameState() = "Main_World"
+
+End Sub
 
 
 Sub OnScriptExit
-	dm_ret = dm.FoobarClose(foobar)
-	
+	MessageBox BlockCount
 End Sub
 
-
-Sub DrawCharPos
-	dm_ret = dm.FoobarTextRect(foobar,5,5,100,200)
-	dm_ret = dm.FoobarClearText(foobar)
-	Call Lib.CC.GetCharPosInt()
-	dm_ret = dm.FoobarPrintText(foobar,CharX&"|"&CharY&"|"&CharZ,"FF0000")
-	dm_ret = dm.FoobarFillRect(foobar, 4*CharX+1 , 4*CharY + 1, 4*CharX+4 , 4*CharY + 4, "FF0000")
+Function WaitLoading()
 	
-End Sub
-
-
-Function ScanEgg
-Call Lib.CC.GetSubAddress()
-Call Lib.CC.GetWorldSize()
-
-reset_time = 2
-
-For reset_time
-Dim Index, Zero_Counter, Reset_Counter
-Index = 0
-Zero_Counter = 0
-index_bound = 0
+Do
+	Call Lib.CC.GetCharPos()
+	Delay 100
+Loop Until CharX = 0
 
 Do
-	
-Call Lib.CC.GetEntityPos(Index)
-Call Lib.CC.GetEntityID(Index)
+	Call Lib.CC.GetCharPos()
+	Delay 100
+Loop While CharX = 0
 
 
-//获取实体上界
-If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ  Then 
-	index_bound = index
-	If index_bound > 1000 Then 
-		Exit Do
-	End If
-	
-Else 
-	Zero_Counter = Zero_Counter + 1
-	
+
+End Function
+
+Function Mine_Precise_Fairy(Target_x, Target_y, Target_z, Block_Want)
+
+Dim block_read
+block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
+If block_read  <> block_want  Then 
+	Exit Function
 End If
 
+Call Lib.CC.SetCamera(0, 89)
 
-Index = Index + 1
+TracePrint "alalala"
 
-If Zero_Counter > 1 Then 
-	
-	Delay 200
-	Exit Do
-End If
+Call Lib.CC.WriteBlock(Target_x - 1, Target_y, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x + 1, Target_y, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y - 1, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y + 1, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x - 1, Target_y, Target_z - 1, 351)
+Call Lib.CC.WriteBlock(Target_x + 1, Target_y, Target_z - 1, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y - 1, Target_z - 1, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y + 1, Target_z - 1, 351)
 
 
-Loop
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y + 0.1 , Target_z - 2)
+Delay 100
 
-Delay 50
 
-TracePrint index_bound
-
-For index = index_bound To 0 Step -1
-
-Call Lib.CC.GetEntityPos(Index)
-Call Lib.CC.GetEntityID(Index)
-
-//Collect
-If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And 94 <=  EntityID <=99 Then 
-	Dim block
-	block = Lib.CC.ReadBlock( round(EntityX) , round(EntityY) , round(EntityZ)  )
-	
-	If block <> 140 Then 
-		Call Lib.CC.GetCharPos() 
-		Call Lib.CC.GetEntityPos(Index)
-		dm_ret = dm.FoobarFillRect(foobar, 4 * EntityX + 1, 4 * EntityY + 1, 4 * EntityX + 4, 4 * EntityY + 4, "FF9c3b")
-//		dm.WaitKey 115, 0
-		Delay 100
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
 	End If
+Wend
 
+//If Collect_Enable Then
+
+Delay 500
+
+
+//End If
+
+//Delay 500
+//
+Call Lib.CC.TP(Target_x, Target_y , Target_z - 1)
+
+Delay 3000
+
+
+
+	
+End Function
+
+
+Function ReapBlock_Fairy(Block_Want)
+	
+
+Dim block_ID_want, block_type_want
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+
+
+Dim addresses, I
+addresses = Lib.CC.FindBlock(Block_Want)
+addresses = Split(addresses, "|")
+
+For Each I In addresses
+	Dim block_ID, block_type, block
+	block_ID = Lib.CC.AdrToPos(I, 0)
+	block_type = Lib.CC.AdrToPos(I, 1) Mod 8
+	block = block_type * 256 + block_ID
+	If block = block_want Then 
+		BlockCount = BlockCount + 1
+		bx = Lib.CC.AdrToPos(I, 2)
+		by = Lib.CC.AdrToPos(I, 4)
+		bz = Lib.CC.AdrToPos(I, 6)
+		Call Mine_Precise_Fairy(bx, by, bz, block_want)
+
+	End If
+Next		
+
+
+
+
+End Function
+
+
+Function BoomBlock(Reap_Array)
+
+
+boom_x = 0
+boom_y = 0
+boom_z = 0
+
+For Each Block In Reap_Array
+    target_ads_arr = Lib.CC.FindBlock(Block)
+    addresses = Split(target_ads_arr, "|")
+
+
+    For Each I In addresses
+        Dim block_ID, block_type, bx, by, bz, dx, dy, dz
+        BlockCount = BlockCount + 1
+        bx = Lib.CC.AdrToPos(I, 2)
+        by = Lib.CC.AdrToPos(I, 4)
+        bz = Lib.CC.AdrToPos(I, 6)
+		
+		
+        If Lib.CC.ReadBlock(bx, by, bz) = Block  Then 
+        Else
+            Goto Skip
+        End If
+		
+		If Abs(bx-boom_x) + Abs(by_boom_y) < 5  Then 
+            Goto Skip
+        End If
+        
+ 		Lib.CC.SetCamera 0, 89
+		
+		//设置爆炸点
+		
+		Dim counter, sum_x, sum_y, sum_z
+		couneter = 0
+		sum_x = 0
+		sum_y = 0
+		sum_z = 0
+		
+		For dx = 0 To 4
+		For dy = - 2  To 2
+		For dz = - 1  To 3
+			If Lib.CC.InArray(Lib.CC.ReadBlock(bx + dx, by + dy, bz + dz), Reap_Array) Then 
+				counter = counter + 1
+				sum_x = sum_x + dx
+				sum_y = sum_y + dy
+				sum_z = sum_z + dz
+			End If	
+		Next
+		Next
+		Next
+		
+		If counter < 3 Then 
+			Goto Skip
+		End If
+		
+		
+		bx = bx + round(sum_x / counter)
+		by = by + round(sum_y / counter)
+		bz = bz + round(sum_z / counter)
+		
+		Do
+			bz = bz + 1
+		Loop While Lib.CC.InArray(Lib.CC.ReadBlock(bx, by, bz), Reap_Array)
+        
+        //清空爆炸点附近方块
+        
+        For dz = -10 To -1 
+        For dx = - 2 To + 2
+        For dy = - 2 To + 2
+        	If (dx = 0) And (dy = 0) And (dz = 0) Then 
+        	Else
+        		Lib.CC.WriteBlock bx + dx, by + dy, bz + dz, 0
+        	End If
+            	
+            	
+        Next
+		Next
+		Next
+		
+
+        Lib.CC.TP bx, by - 1, bz - 1
+        TracePrint Lib.CC.ReadBlock(bx, by, bz)
+        If Lib.CC.ReadBlock(bx, by, bz) <> 0 Then 
+        	
+        	Grab 
+      		Delay 1000
+      		Lib.CC.TP bx, by - 1, bz - 1
+      		
+        End If
+        
+        Boom 
+        Block_Count = Block_Count + 1
+        boom_x = bx
+        boom_y = by
+        boom_z = bz
+     
+        Delay 1000
+//        Lib.CC.TP bx + 2.3, by + 2.3, bz - 1
+//        Delay 100
+        
+        
+        
+        
+        
+//        Lib.CC.WriteBlock bx, by, bz - 5, 650
+//        Lib.CC.TP bx, by, bz - 6
+//        Delay 200
+//	
+//        dm.WaitKey 115,0
+//        Delay 200
+//        Lib.CC.TP bx, by, bz
+//        
+//        dm.WaitKey 115, 0
+//        Delay 200
+        
+        
+        
+		
+        
+        Rem Skip
+    Next
+Next
+
+Lib.CC.TP boom_x + 3, boom_y + 3, boom_z
+dm.KeyPressChar "space"
+
+Delay 5000
+
+
+
+CollectItem
+	
+	
+End Function
+
+
+Function Grab()
+	Call Lib.CC.CubicClick(handle,378,935)
+	Delay 500
+	Call Lib.CC.CubicClick(handle,640,540)
+End Function
+
+Function Boom()
+	Call Lib.CC.CubicClick(handle,496,930)
+	Delay 500
+	Call Lib.CC.CubicClick(handle,640,540)
+End Function
+
+Function CollectItem()
+
+e_size = Lib.CC.GetEntitySize() 
+For index = e_size + 10 To 1 Step -1
+Call Lib.CC.GetCharPos()
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+
+If 1  < EntityX < SizeX And 1 < EntityY < SizeY And 0 < EntityZ < SizeZ And Lib.CC.InArray(EntityID,Reap_Array) Then 
+	Call Lib.CC.WriteBlock(round(EntityX), round(EntityY), round(EntityZ+1), 401)
+	Delay 100
+	Call Lib.CC.TP(EntityX, EntityY , EntityZ - 1)
+	dm.KeyPressChar "A"
+	dm.KeyPressChar "D"
+	dm.KeyPressChar "A"
+	dm.KeyPressChar "D"
+	Item_Count = Item_Count + 1
+	Delay 150
 End If
 
 Next
-
-Next
-
-TracePrint "Scanned"
-
-Delay 1000
 
 End Function

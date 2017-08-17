@@ -4,18 +4,25 @@ MacroID=f6ae5bd1-b251-4b0c-b4c9-1d8cd6e27843
 [Comment]
 
 [Script]
-
-
 Sub Initailize
 	Set dm = createobject("dm.dmsoft")  //创建对象
 	handle = Plugin.Window.MousePoint	//获取鼠标指向窗口的句柄
-	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F29BC]+874", 0)//获取地图区域基址
+	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F2A5C]+874", 0)//获取地图区域基址
 	dm.SetPath "C:\Users\Administrator\Documents\DmRes"'大漠全局路径设置
+	Lib.CD.InitParas 
+	Lib.CC.InitParas
+End Sub
+
+Sub InitParas
+
+CC_QbeeType = 48
+CD_BlockArraySize = 20
+	
 End Sub
 
 Sub GetSubAddress
 
-	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F29BC]+874", 0)
+	SubAddress = dm.ReadInt(handle, "[<Cubic.exe>+002F2A5C]+874", 0)
 	
 End Sub
 
@@ -58,66 +65,69 @@ End Sub
 
 
 Sub GetCharPos    //??
-	CharX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24")
-	CharY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28")
-	CharZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C")
+	CharX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24")
+	CharY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28")
+	CharZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C")
 End Sub
 
 
 Function SetCharPos(TPX, TPY, TPZ)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C", TPZ)
 End Function
 
 Sub GetCharPosInt    //??
-	CharX = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24"))
-	CharY = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28"))
-	CharZ = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C"))
+	CharX = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24"))
+	CharY = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28"))
+	CharZ = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C"))
 End Sub
 
 Function GetEntityPos(Index)
-	EntityX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+24")
-	EntityY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+28")
-	EntityZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+2C")
-	EntityX2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+34")
-	EntityY2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+38")
-	EntityZ2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+3C")
+	EntityX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+24")
+	EntityY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+28")
+	EntityZ = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+2C")
+	EntityX2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+30")
+	EntityY2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+34")
+	EntityZ2 = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+38")
+	//TracePrint EntityX & "," & EntityY & "," & EntityZ
+	//TracePrint EntityX2 & "," & EntityY2 & "," & EntityZ2
+	GetEntityPos = Array(EntityX,EntityY,EntityZ,EntityX2,EntityY2,EntityZ2)
 End Function
 
 Function GetEntityID(index)
-	EntityID   = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F2", 1)
-	EntityType = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F0", 2)
-	EntityNum  = dm.ReadInt(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+F4", 1)
+	EntityID   = dm.ReadInt(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+F2", 1)
+	EntityType = dm.ReadInt(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+F0", 2)
+	EntityNum  = dm.ReadInt(handle, "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+F4", 1)
 End Function
 
 Function SetEntityPos(Index, Target_X, Target_Y, Target_Z)
-	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+24", Target_X)
-	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+28", Target_Y)
-	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+2C", Target_Z)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+24", Target_X)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+28", Target_Y)
+	dm_ret = dm.WriteFloat(handle,  "[[[<Cubic.exe>+002F2A5C]+9C0]+" & Hex(4 * index) & "]+2C", Target_Z)
 End Function
 
 Sub GetFocuPos   //??
-	FocuX = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+984")
-	FocuY = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+988")
-	FocuZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+98C")
+	FocuX = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+984")
+	FocuY = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+988")
+	FocuZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+98C")
 End Sub
 
 Sub GetCamPos
-	CamX = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+990")
-	CamY = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+994")
-	CamZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+998")
+	CamX = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+990")
+	CamY = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+994")
+	CamZ = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+998")
 End Sub
 
 Sub GetCamera    //??
-	Azimu = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+97C"))
-	Polar = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+980"))
+	Azimu = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+97C"))
+	Polar = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+980"))
 End Sub
 
 Sub DrawCharPos   //??
-	CharX = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24"))
-	CharY = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28"))
-	CharZ = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C"))
+	CharX = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24"))
+	CharY = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28"))
+	CharZ = Round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C"))
 	dm_ret = dm.FoobarFillRect(foobar, 4*CharX , 4*CharY, 4*CharX+4 , 4*CharY + 4, "FF0000")
 	
 End Sub
@@ -128,8 +138,8 @@ Function BindClick(ClickX, ClickY)
 End Function
 
 Function SetCamera(Azimu, Polar)
-	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F29BC]+97C", Azimu)
-	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F29BC]+980", Polar)
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F2A5C]+97C", Azimu)
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F2A5C]+980", Polar)
 End Function
 
 Function TPT(TPX, TPY, TPZ)
@@ -144,9 +154,9 @@ Function TPT(TPX, TPY, TPZ)
 	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
 		Exit Function
 	End If
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C", TPZ)
 
 	Do
 		Call Lib.CC.GetCharPos()
@@ -161,29 +171,28 @@ Function TPEx(TPX, TPY, TPZ)//This function based on TP, but require Z equals, t
 		Exit Function
 	End If
 	Dim cam_x, cam_y, cam_z, count
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C", TPZ)
 	count = 0
 	Do
-		cam_x = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+984")
-		cam_y = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+988")
-		cam_z = dm.ReadFloat(handle, "[<Cubic.exe>+002F29BC]+98C")
+		cam_x = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+984")
+		cam_y = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+988")
+		cam_z = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+98C")
 		count = count + 1
 		Delay 20
 	Loop While Abs(cam_x - TPX) + Abs(cam_y - TPY) + Abs(cam_z - TPZ) > 0.1 And count < 30
 End Function
 
 Function TP(TPX, TPY, TPZ)
-
 	
 	If TPX = 0 And TPY = 0 And TPZ = 0 Then 
 		Exit Function
 	End If
 
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C", TPZ)
 
 	Delay 100
 End Function
@@ -195,9 +204,9 @@ Function TPP(TPX, TPY, TPZ)
 		Exit Function
 	End If
 
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+24", TPX)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+28", TPY)
-	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+2C", TPZ)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24", TPX)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28", TPY)
+	dm_ret = dm.WriteFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C", TPZ)
 	dm_ret = WriteBlock( round(TPX) , round(TPY), round(TPZ + 1 ), 350  )
 
 	Delay 100
@@ -368,7 +377,7 @@ End Function
 
 
 Function MinePrecise(Target_x, Target_y, Target_z, Block_Want)
-
+//2017-8-10 01:23:40
 Dim block_read
 block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
 If block_read  <> block_want  Then 
@@ -377,47 +386,70 @@ End If
 
 Call Lib.CC.SetCamera(0, 89)
 
-//Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z + 1, 0)
-//Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z + 2, 351)
-
-//If block_want = 240 Then 
-//	Call Lib.CC.WriteBlock(Target_x, Target_y, Target_z, 705)
-//End If
-//Delay 200
-
+//改空人物上方方块
 For sub_z = Target_z -1 To 50 Step -1
 Call Lib.CC.WriteBlock(Target_x, Target_y, sub_z, 0)
 Next
 
-
+//掘取目标方块
 Rem Grab	
 Call Lib.CC.TPEx(Target_x, Target_y + 0.1 , Target_z - 2)
 Delay 100
-
-
 CCount = 0
-Call Lib.CC.BiasClick(handle,0,0)
+Call Lib.CC.BiasClick(handle, 0, 0)
+//temp_size = Lib.CC.GetEntitySize()
 While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
 	CCount = CCount + 1
-	Delay 50
-	If CCount > 30 Then 
+	Delay 1000
+	If CCount > 3 Then 
 		Goto Grab
 	End If
 Wend
+//While (temp_size = Lib.CC.GetEntitySize())
+//Delay 20
+//Wend
+counter = 0
+Do
+	Delay 100
+	counter = counter + 1
+Loop Until Lib.CC.CollectItemNear() = 0 Or counter>3
+End Function
 
-//If Collect_Enable Then
+Function CollectItemNear()
 
-For index = 0 To EntitySize + 10
+//采集人物附近的掉落物
+
+
+CollectItemNear = 1
+Call Lib.CC.GetEntitySize()
+TracePrint EntitySize
+For index = EntitySize + 10 To 0 Step -1
 	Call Lib.CC.GetCharPos()
-	Call Lib.CC.GetEntityPos(index)
-	If Abs(CharX - EntityX) <1.5 And Abs(CharY - EntityY) <1.5 Then
+	pos = Lib.CC.GetEntityPos(index)
+	Call Lib.CC.GetEntityID(index)
+	
+	
+	If Abs(CharX - EntityX) < 1.5 And Abs(CharY - EntityY) < 1.5 And EntityType <> CC_QbeeType And Lib.CC.IsEntityData(index) Then 
 		Call Lib.CC.TP(EntityX, EntityY, EntityZ)
+		TracePrint "hahahahahahahah"
+//		dm.KeyPressChar "W"
+//		dm.KeyPressChar "S"
+//		Do
+//			pos2 = Lib.CC.GetEntityPos(index)
+//			sum = Abs(pos(0)-pos2(0)) + Abs(pos(1)-pos2(1))
+//			Delay 100
+//		Loop Until sum > 0
+		Delay 200
+		CollectItemNear = 0
 	End If
+
+
 Next
-//End If
 
 
 End Function
+
+
 
 Function MinePreciseCare(Target_x, Target_y, Target_z, Block_Want)
 
@@ -541,11 +573,20 @@ Function InArray(Element, Array)
 
 Dim index
 For Each index In Array
-	If index = Element Then 
-		InArray = True
-		Exit For
+	If TypeName(index) = "String" Then
+		If index = Element Then 
+			InArray = True
+			Exit For
+		Else 
+			InArray = False
+		End If
 	Else 
-		InArray = False
+		If index - Element = 0 Then 
+			InArray = True
+			Exit For
+		Else 
+			InArray = False
+		End If
 	End If
 Next
 
@@ -560,6 +601,14 @@ Next
 
 End Function
 
+Function GetMapRange()
+//2017-8-8 04:01:07
+Dim my_array(2), my_range
+my_array(0) = CStr(Hex(SubAddress + 20))
+my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20))
+my_range = Join(my_array, "-")
+GetMapRange = my_range 
+End Function
 
 Function ReapBlock(Block_Want, Direction)
 //2017-4-20 13:49:45
@@ -574,13 +623,10 @@ block_ID_want   = Block_Want Mod 256
 block_type_want = Block_Want \ 256
 
 
-
-Dim my_array(2), my_range
-my_array(0) = CStr(Hex(SubAddress + 20))
-my_array(1) = CStr(Hex(SubAddress + SizeX*SizeY*SizeZ*20))
-my_range = Join(my_array, "-")
-
-Dim target_ads_arr, addresses
+//my_range = GetMapRange()
+//
+//
+//Dim target_ads_arr, addresses
 //target_ads_arr = dm.FindIntEx(handle, my_range, block_ID_want, block_ID_want, 2, 20, 0, 0) 
 target_ads_arr = FindBlock(block_want)
 
@@ -593,16 +639,17 @@ array_count = UBound(addresses)
 
 If Direction = "up" Then 
 For index = 0 To Round(array_count / 2 - 0.1)
-	
 	temp = addresses(index)
 	addresses(index) = addresses(array_count - index)
 	addresses(array_count - index) = temp
-	
 Next
 End If
 
-Dim I, scan_count
-scan_count = 0
+If Lib.CC.ScanPpl() > 1 Then
+	ReapBlock = 1
+	Exit Function
+End If
+
 For Each I In addresses
 	Dim block_ID, block_type, block
 	block_ID = Lib.CC.AdrToPos(I, 0)
@@ -613,24 +660,17 @@ For Each I In addresses
 		bx = Lib.CC.AdrToPos(I, 2)
 		by = Lib.CC.AdrToPos(I, 4)
 		bz = Lib.CC.AdrToPos(I, 6)
+
 		Call Lib.CC.MinePrecise(bx, by, bz, block_want)
 		
-		If Lib.CC.ScanPpl() > 1 Then
-			scan_count = scan_count + 1
-		End If
-		If scan_count > 2 Then 
-			Delay 500
-			Call Lib.CC.CubicClick(handle, 1256, 22)
-			Delay 500
-			Call Lib.CC.CubicClick(handle, 560, 536)
-			Exit Function
-		End If
+
+
 	End If
 		
 
 Next
 
-
+ReapBlock = 0
 
 
 
@@ -778,8 +818,8 @@ Next
 End Function
 
 Function GetCharPix()
-	CharPiX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+4C")
-	CharPiY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+954]+1C0]+50")	
+	CharPiX = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+4C")
+	CharPiY = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+50")	
 End Function
 
 Function BiasClick(handle, bx, by)
@@ -791,57 +831,36 @@ End Function
 
 Function DMBind(handle)
 	
-Call dm.BindWindowEx(handle, "dx2", "windows2", "dx", "", 0)
+Call  dm.BindWindow(handle, "dx2", "dx2", "dx", 0)
 
+End Function
+
+Function IsEntityData(index)
+//2017-8-9 19:45:38
+Call Lib.CC.GetEntityPos(index)
+Call Lib.CC.GetEntityID(index)
+//TracePrint EntityNum
+If EntityX = EntityX2 And EntityY = EntityY2 And EntityZ > 0 Then 
+	IsEntityData = True
+Else 
+	IsEntityData = False
+End If
+//TracePrint "Entity:" & IsEntityData
 End Function
 
 Function GetEntitySize()
 
-Call Lib.CC.GetSubAddress()
-Call Lib.CC.GetWorldSize()
-float_z = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F29BC]+9C0]+" & Hex(4 * index) & "]+38")
+Dim index
+index = 0
 
+While IsEntityData(index)
+//TracePrint IsEntityData(index)
+index = index + 1	
+Wend
 
-Dim Index, Zero_Counter, Reset_Counter
-Index = 0
-Zero_Counter = 0
-index_bound = 0
-
-Do
-	
-Call Lib.CC.GetEntityPos(Index)
-Call Lib.CC.GetEntityID(Index)
-
-
-
-//获取实体上界
-If -1 < EntityX < SizeX And -1  < EntityY < SizeY And 0 < EntityZ < SizeZ Then
-	index_bound = index
-	If index_bound > 1000 Then 
-		Exit Do
-	End If
-	
-Else 
-	Zero_Counter = Zero_Counter + 1
-End If
-
-
-Index = Index + 1
-
-If Zero_Counter > 1 Then 
-	
-	Delay 200
-	Exit Do
-End If
-
-
-Loop
-
-Delay 50
-
-TracePrint index_bound
-GetEntitySize = index_bound
-EntitySize = index_bound
+//TracePrint index
+GetEntitySize = index
+EntitySize = index
 End Function
 
 Function DetectEntity(x1,x2,y1,y2,z1,z2)
@@ -877,7 +896,7 @@ Call Lib.CC.GetEntityPos(index)
 Call Lib.CC.GetEntityID(index)
 
 DetectPpl = 0
-If x1 < EntityX < x2 And y1  < EntityY < y2 And z1 < EntityZ < z2 And EntityType = 236 Then
+If x1 < EntityX < x2 And y1  < EntityY < y2 And z1 < EntityZ < z2 And EntityType = CC_QbeeType Then
 	DetectPpl = 1
 	TracePrint "Detected"
 	Exit Function
@@ -902,7 +921,7 @@ Call Lib.CC.GetEntityID(index)
 
 DetectPplFull = 0
 TracePrint EntityType
-If 0 < EntityX < SizeX And 0  < EntityY < SizeY And 0 < EntityZ < SizeZ And EntityType = 236 Then
+If 0 < EntityX < SizeX And 0  < EntityY < SizeY And 0 < EntityZ < SizeZ And EntityType = CC_QbeeType Then
 	DetectPplFull = 1
 	TracePrint "Detected"
 	Exit Function
@@ -916,57 +935,21 @@ End Function
 Function ScanPpl
 Call Lib.CC.GetSubAddress()
 Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntitySize()
 
-reset_time = 1
-
-
-Dim Index, Zero_Counter, Reset_Counter
-Index = 0
-Zero_Counter = 0
-index_bound = 0
-
-Do
-	
-Call Lib.CC.GetEntityPos(Index)
-Call Lib.CC.GetEntityID(Index)
-
-
-//获取实体上界
-If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And ( EntityType < 10  Or EntityType = 236 ) Then 
-	index_bound = index 
-	
-Else 
-	Zero_Counter = Zero_Counter + 1
-	
-End If
-
+TracePrint EntitySize
 
 ScanPpl = 0
-
-Index = Index + 1
-
-If Zero_Counter > 0 Then 
-	
-	Delay 200
-	Exit Do
-End If
-
-
-Loop
-
-Delay 100
-
-TracePrint index_bound
-
-For index = 0 To index_bound
+For index = EntitySize + 10 To 0 Step -1
 
 Call Lib.CC.GetEntityPos(Index)
 Call Lib.CC.GetEntityID(Index)
 
 //Collect
-If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And EntityType = 236 Then 
+
+If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And EntityType = CC_QbeeType Then 
 	ScanPpl = ScanPpl + 1
-	TracePrint "Scanned"
+	TracePrint "Scanned: " & ScanPpl
 End If
 
 Next
@@ -975,3 +958,5 @@ Next
 
 
 End Function
+
+

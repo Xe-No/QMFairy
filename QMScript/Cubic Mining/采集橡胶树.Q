@@ -41,7 +41,7 @@ Call Lib.CC.GetWorldSize()
 BlockCount = 0
 ReapBlock(217)
 ReapBlock(251)
-ReapBlock (249)
+ReapBlock(249)
 
 t1 = Plugin.GetSysInfo.GetTime()
 MessageBox BlockCount & Chr(13) & t1-t0

@@ -8,9 +8,9 @@ StopHotkey=123
 StopHotkeyMod=0
 RunOnce=1
 EnableWindow=
-MacroID=7c1a57e5-3a5a-4bfe-9f2c-3c7db25ce89f
-Description=alts quest new 2
-Enable=0
+MacroID=b2a4312d-3c20-42bf-a1ea-e536d8c76c0f
+Description=通用型野外采集脚本
+Enable=1
 AutoRun=0
 [Repeat]
 Type=0
@@ -23,145 +23,336 @@ SetupOCXFile=
 [Comment]
 
 [Script]
-//小号任务状态写入测试
+//UserVar WorldName = "WorldA" "世界名称"
+//WorldName = "WorldA"
+UserVar MineRange = DropList{"世界级":"世界级"|"领域级":"领域级"} "采集等级"
+UserVar WorldName = DropList{"Eden":"WorldE"|"Tinker":"WorldT"|"Pelago":"WorldP"|"Spyre":"WorldS"|"Aspen":"WorldA"} "世界名称"
+UserVar ReapCases=DropList{"自定义":0|"大理石 579,585,586 ":1|"块石 133,220,235":2|"精灵":3|"树木":4}=2 "收获类型"
+UserVar ReapString = "221" "目标方块"
 
-UserVar Kernel_Number = 1 "核心编号"
-UserVar Kernel_Max = 4 "核心总数"
+Dim block, ReapArray
+
+Select Case ReapCases
+	Case 0
+		ReapArray = Split(ReapString,",")
+	Case 1
+		ReapArray = Array(579,585,586)
+	Case 2
+		ReapArray = Array(133, 220, 235)
+	Case 3
+		ReapArray = Array(371, 374)
+	Case 4
+		ReapArray = Array(221, 217, 224, 227, 229)
+End Select
+
+BlockCount = 0
 
 
 Call Lib.CC.Initailize()
-IsBind = dm.BindWindow(handle, "dx2", "dx2", "dx", 0)
-Delay 500
-Dm.SetPath "C:\Users\Administrator\Documents\DmRes"'大漠全局路径设置
-dm.WriteFile  "ScriptLog\" &  "Alts.txt",   "[" & Date & "]" & "Start Log" & vbCrLf
 
+Call Lib.CC.DMBind(handle)
 
-//初始化窗口
-fooX1 = 100
-fooY1 = 400
-foobar = dm.CreateFoobarCustom(handle, fooX1, fooY1, "UI2.bmp", "FF00FF", 1.0)
-////////////////////
-Call Lib.CM.SendInfo("Script Initialized", 1)
+//Call Lib.CC.CollectItemNear()
+//
+//EndScript
 
-If IsBind = 1 Then 
-	TracePrint IsBind
-	Call Lib.CM.SendInfo("Window Binded", 1)
-End If
-	
-Dim index	
-acc_index = Kernel_Number
+Rem Start
+
+Randomize
+
+Select Case MineRange
+Case "世界级"
 
 Do
-Call ActivateAccount(acc_index)
-acc_index = acc_index + Kernel_Max
-TracePrint acc_index
+
+World_Index = Round( Rnd() * 5 ) 
+
+If TPMine(WorldName, World_Index) = 0 Then 
+	World_Index = World_Index + 1
+Else	
+	World_Index = Round( Rnd() * 5 ) 
+	Goto Skip
+End If
+JumpForward
+WaitLoading
+
+Hunt
+
+Leave
+WaitLoading
+Delay 1500
+
+Rem Skip
+
 Loop
 
+Case "领域级"
+
+Hunt 
+
+End Select
 
 
-Function ActivateAccount(index)
+Sub Hunt
+Dim index
+Call Lib.CC.GetSubAddress()
+Call Lib.CC.GetWorldSize()
+Call Lib.CC.GetEntitySize()
 
-path = "C:\Users\Administrator\Documents\DmRes\AltsState.log"
+GemArray = Array(651, 652, 653)
+BushArray = Array(238, 241, 243, 245, 251)
+TreeArray = Array(221, 217, 224, 227, 229)
+FairyArray = Array(371, 374)
+AppendArray = Array(236, 237, 228, 372)
 
-incar = Lib.文件.读取指定行文本内容(path, index)
-incar = Split(incar, "|")
-alt_name = incar(0)
-alt_password = incar(1)
-alt_time = incar(2)
-alt_state = incar(3)
 
-If alt_name = "" Then 
-	ExitScript
+
+
+
+Dim block
+
+For Each block In AppendArray
+	Call Lib.CC.ReplaceBlockAll(block, 705)
+Next
+
+
+For Each block In ReapArray
+TracePrint block
+If Lib.CC.InArray(block, TreeArray) Then
+	Call Lib.CC.ReplaceBlockAll(block, 704)		//树木方块
+ElseIf Lib.CC.InArray(block, FairyArray) Then
+	Call Lib.CC.ReplaceBlockAll(block, 702)		//精灵方块	
+Else 
+	Call Lib.CC.ReplaceBlockAll(block, 705)  	//一般方块
 End If
 
 
-result = Lib.CM.ActivateQuest(alt_name, alt_password)
 
-TracePrint result
+
+Next
+
+//转化不利的方块
+Call Lib.CC.ReplaceBlockAll(218, 138)
+Call Lib.CC.ReplaceBlockAll(222, 138)
+Call Lib.CC.ReplaceBlockAll(250, 138)
+Call Lib.CC.ReplaceBlockAll(234, 138)
+Call Lib.CC.ReplaceBlockAll(240, 138)
+Call Lib.CC.ReplaceBlockAll(230, 138)
+
+
+Call Lib.CC.ReapBlock(704, "up")
+Call ReapBlock_Fairy(702)
+Call Lib.CC.ReapBlock(705, "up")
+
+
+
+Rem SkipHunting
+
+Delay 100
+End Sub
+
+
+Function TPMine(WorldName, MineIndex)
+Dim MyString, MyArray
+MinePos = Lib.文件.读取指定行文本内容("C:\Users\Administrator\Documents\DmRes\" & WorldName & ".txt",MineIndex)
+If MinePos = "" Then 
+//EndScript
+	TPMine = 1
+Else 
+	MyString = Split(MinePos, ",", - 1 , 1)
+	MineX = CSng(MyString(0))
+	MineY = CSng(MyString(1))
+	MineZ = CSng(MyString(2))
+	
+	Call Lib.CC.TP(MineX, MineY, MineZ)
+	Delay 1000
+	TPMine = 0
+End If
+	
+	
+End Function
+
+
+Sub JumpForward
+
+Dim  ty
+Call Lib.CC.GetCharPos()
+ty = CharY
+
+Delay 200
+dm.KeyDownChar "W"
+Delay 16
+dm.KeyDownChar "Space"
+Delay 219
+dm.KeyUpChar "Space"
+Delay 31
+dm.KeyUpChar "W"
+Delay 1000
+
+Call Lib.CC.GetCharPos()
+
+If Abs(ty - CharY) < 0.7 Then 
+	Goto Skip
+End If
+
+End Sub
+
+Sub Leave
+
+Dim addr,addr_lst,x,y,z
+addr_lst = Lib.CC.FindBlock(10)
+addr_lst = Split(addr_lst, "|")
+
+For Each addr In addr_lst
+
+x = Lib.CC.AdrToPos(addr, 2)
+y = Lib.CC.AdrToPos(addr, 4)
+z = Lib.CC.AdrToPos(addr, 6)
+
+
+If x = 50 And y = 50 Then 
+	Call Lib.CC.TPP(x, y + 0.5, z)
+	Exit For
+End If
+
+
+
+	
+Next
+
+Delay 500
+dm.KeyDownChar "W"
+Delay 800
+dm.KeyUpChar "W"
+
+
+
+TracePrint "Leave"
+End Sub
+
+
+Sub WaitInnerWorld
+
+Do
+Delay 1000
+Loop Until Lib.CC.GetGameState() = "Realm"
+
+End Sub
+
+
+Sub WaitOverWorld
+
+Do
+Delay 1000
+Loop Until Lib.CC.GetGameState() = "Main_World"
+
+End Sub
+
+
+Sub OnScriptExit
+	MessageBox BlockCount
+End Sub
+
+Function WaitLoading()
+	
+Do
+	Call Lib.CC.GetCharPos()
+	Delay 100
+Loop Until CharX = 0
+
+Do
+	Call Lib.CC.GetCharPos()
+	Delay 100
+Loop While CharX = 0
+
 
 
 End Function
-//Function ActivateQuest(alt_name,alt_password)
+
+Function Mine_Precise_Fairy(Target_x, Target_y, Target_z, Block_Want)
+
+Dim block_read
+block_read = Lib.CC.ReadBlock(Target_x, Target_y, Target_z)
+If block_read  <> block_want  Then 
+	Exit Function
+End If
+
+Call Lib.CC.SetCamera(0, 89)
+
+TracePrint "alalala"
+
+Call Lib.CC.WriteBlock(Target_x - 1, Target_y, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x + 1, Target_y, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y - 1, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y + 1, Target_z, 351)
+Call Lib.CC.WriteBlock(Target_x - 1, Target_y, Target_z - 1, 351)
+Call Lib.CC.WriteBlock(Target_x + 1, Target_y, Target_z - 1, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y - 1, Target_z - 1, 351)
+Call Lib.CC.WriteBlock(Target_x, Target_y + 1, Target_z - 1, 351)
+
+
+Rem Grab	
+Call Lib.CC.TPEx(Target_x, Target_y + 0.1 , Target_z - 2)
+Delay 100
+
+
+CCount = 0
+Call Lib.CC.BiasClick(handle,0,0)
+While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
+	CCount = CCount + 1
+	Delay 50
+	If CCount > 30 Then 
+		Goto Grab
+	End If
+Wend
+
+//If Collect_Enable Then
+
+Delay 500
+
+
+//End If
+
+//Delay 500
 //
-//	If Lib.CC.GetAccState( alt_name ) = 1 Then 
-//		Call Lib.CM.SendInfo(alt_name & " malfunctioned ! >_< Skipping ", 0)
-//		Goto Pass
-//	End If
-//
-//	
-//	Call Login(alt_name, alt_password)
-//	//Call Lib.CM.SendInfo("Loading...", 2)
-//	Call Lib.CM.WaitLoading
-//	Call Lib.CC.GetSubAddress()
-//	
-//	Delay 200
-//	
-//	Call TP_Start()
-//	
-//	If IsAltsWorld Then 
-//		Call Lib.CM.SendInfo("Alts room verified ! >:3", 1)
-//	Else 
-//		Call Lib.CM.SendInfo("Alts room not verified , attempting to tp Master ", 3)
-//		Delay 100
-//		Call Lib.CM.SendInfo(      TP_BOSS()        , 1)
-//		Delay 1000
-//		Call Lib.CM.WaitLoading
-//		If IsAltsWorld Then 
-//		
-//			Call Lib.CM.SendInfo("Alts room verified ! >:3", 1)
-//		
-//		Else 
-//			Call Lib.CM.SendInfo("Alts room still not verified , quest aborted :Q:", 3)
-//			Error_String = Error_String & alt_name &  " : Not in Room"   & Chr(13)
-//			Goto Before_Logout
-//			
-//		End If
-//	End If
-//
-//
-//
-//	If IsAltsWorld Then 
-//	dm_ret = dm.FoobarPrintText(foobar, "Alts room verified ! >:3", "FF0000")
-//	
-//	Else 
-//			dm_ret = dm.FoobarPrintText(foobar, "Alts room not verified , quest aborted :Q:", "FF7F00")
-//			Error_String = Error_String & alt_name &  " : Not in Room"   & Chr(13)
-//			Goto Before_Logout
-//			
-//	End If
-//	
-//	Delay Time_Sub
-//	Call Lib.CM.SendInfo("Quest checking...", 2)
-//	Quest_Checked = CheckQuest()
-//	
-//	If Quest_Checked = "Invalid Quest" Then 
-//		Call Lib.CM.SendInfo("Invalid Quest", 3)
-//		dm.WriteFile  "ScriptLog\" & Date & "Alts.txt", alt_name & " : Invalid Quest" & Chr(13)
-//		Error_String = Error_String & alt_name & " : Invalid Quest" & Chr(13)
-//		Goto Before_Logout
-//	Else
-//		Call Lib.CM.SendInfo("Quest " & Quest_Checked & " detected ", 0)
-//	End If
-//	
-//	
-//	Call ExecuteQuest(Quest_Checked)
-//
-//	Call Lib.CM.SendInfo(EvaluateQuest, 1)
-//	
-//	
-//	
-//	Rem Before_Logout
-//	
-//	Call Lib.CM.DropItem()
-//	
-//	Delay 300
-//	
-//	Call Logout
-//	Call Lib.CM.SendInfo(alt_name & " deactivated !", 0)
-//	
-//	Rem Pass
-//	
-//Rem PassLogin	
-//
-//End Function
-//
+Call Lib.CC.TP(Target_x, Target_y , Target_z - 1)
+
+Delay 3000
+
+
+
+	
+End Function
+
+
+Function ReapBlock_Fairy(Block_Want)
+	
+
+Dim block_ID_want, block_type_want
+block_ID_want   = Block_Want Mod 256
+block_type_want = Block_Want \ 256
+
+
+Dim addresses, I
+addresses = Lib.CC.FindBlock(Block_Want)
+addresses = Split(addresses, "|")
+
+For Each I In addresses
+	Dim block_ID, block_type, block
+	block_ID = Lib.CC.AdrToPos(I, 0)
+	block_type = Lib.CC.AdrToPos(I, 1) Mod 8
+	block = block_type * 256 + block_ID
+	If block = block_want Then 
+		BlockCount = BlockCount + 1
+		bx = Lib.CC.AdrToPos(I, 2)
+		by = Lib.CC.AdrToPos(I, 4)
+		bz = Lib.CC.AdrToPos(I, 6)
+		Call Mine_Precise_Fairy(bx, by, bz, block_want)
+
+	End If
+Next		
+
+
+
+
+End Function

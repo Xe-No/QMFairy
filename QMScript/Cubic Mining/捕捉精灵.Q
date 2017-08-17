@@ -158,7 +158,7 @@ Call Lib.CC.TPEx(Target_x, Target_y + 1, Target_z)
 Delay 100
 				
 CCount = 0
-Call Plugin.Bkgnd.LeftClick(handle, 640, 480 - 80)
+Call Lib.CC.BiasClick(handle, 0, 80)
 While Lib.CC.ReadBlock(Target_x, Target_y, Target_z) = Block_Want
 	CCount = CCount + 1
 	Delay 50

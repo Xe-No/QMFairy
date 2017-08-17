@@ -21,6 +21,11 @@ QUI=
 [Relative]
 SetupOCXFile=
 [Comment]
+【功能说明】
+用于在商场内收集贩卖机的价格信息。
+
+【使用说明】
+在商场内启动脚本即可。
 
 [Script]
 //物价探测脚本

@@ -7,28 +7,37 @@ MacroID=a6872960-0791-48e1-ab5c-6b696cef90a6
 Sub CreatDM
 	Set dm = createobject("dm.dmsoft")//创建对象
 End Sub
+
+Sub InitParas
+
+CD_BlockArraySize = 20
 	
+End Sub
+
 Function GetHandle
 	GetHandle = Plugin.Window.MousePoint()	//获取鼠标指向窗口的句柄
 End Function
 
 Function GetMapAddr(handle)
-	GetMapAddr = dm.ReadInt(handle, "[<Cubic.exe>+002C5698]+874", 0)	
+	GetMapAddr = dm.ReadInt(handle, "[<Cubic.exe>+002F2A5C]+874", 0)	
 End Function
 
 
-Function GetMapSize(handle, map_addr)
-	Dim size_x, size_y, size_z
+Function GetMapSize(handle)
+	
+	Dim size_x, size_y, size_z,  map_addr
 	size_z = 1
 	size_y = 1
 	size_x = 1
-	Do While Plugin.Memory.Read8Bit(handle, map_addr + 18*size_z + 6) - size_z =0
+	map_addr = GetMapAddr(handle)
+	
+	Do While Plugin.Memory.Read8Bit(handle, map_addr + CD_BlockArraySize * size_z + 6) - size_z = 0
 		size_z = size_z + 1
 	Loop
-	Do While Plugin.Memory.Read8Bit(handle, map_addr + 18*size_z*size_y + 4) - size_y = 0
+	Do While Plugin.Memory.Read8Bit(handle, map_addr + CD_BlockArraySize * size_z * size_y + 4) - size_y = 0
 		size_y = size_y + 1
 	Loop
-	Do While Plugin.Memory.Read8Bit(handle, map_addr + 18*size_z*size_y*size_x + 2) - size_x = 0 
+	Do While Plugin.Memory.Read8Bit(handle, map_addr + CD_BlockArraySize * size_z * size_y * size_x + 2) - size_x = 0
 		size_x = size_x + 1
 	Loop
 	GetMapSize = Array(size_x, size_y, size_z)
@@ -36,26 +45,28 @@ End Function
 
 
 Function GetCharPos(handle)
+//2017-8-8 03:36:48
 	Dim char_x, char_y, char_z
-	char_x = dm.ReadFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+24")
-	char_y = dm.ReadFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+28")
-	char_z = dm.ReadFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+2C")
+	char_x = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24")
+	char_y = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28")
+	char_z = dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C")
 	GetCharPos = Array(char_x, char_y, char_z)
 End Function
 
 Function GetCharPosInt(handle)
+//2017-8-8 03:36:39
 	Dim char_x, char_y, char_z
-	char_x = round(dm.ReadFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+24"))
-	char_y = round(dm.ReadFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+28"))
-	char_z = round(dm.ReadFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+2C"))
+	char_x = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+24"))
+	char_y = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+28"))
+	char_z = round(dm.ReadFloat(handle, "[[[<Cubic.exe>+002F2A5C]+954]+1C0]+2C"))
 	GetCharPosInt = Array(char_x, char_y, char_z)
 End Function
 
 Function GetFocusPos(handle)
 	Dim focus_x, focus_y, focus_z
-	focus_x = dm.ReadFloat(handle, "[<Cubic.exe>+002C5698]+980")
-	focus_y = dm.ReadFloat(handle, "[<Cubic.exe>+002C5698]+984")
-	focus_z = dm.ReadFloat(handle, "[<Cubic.exe>+002C5698]+988")
+	focus_x = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+980")
+	focus_y = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+984")
+	focus_z = dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+988")
 	GetFocusPos = Array(focus_x, focus_y, focus_z)
 End Function
 
@@ -68,9 +79,9 @@ Function GetDistancePlane(pos_1, pos_2)
  End Function
 
 Function SetCharPos(handle, char_pos)
-	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+24", char_pos(0))
-	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+28", char_pos(1))
-	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+2C", char_pos(2))
+	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002F2A5C]+A0C]+24", char_pos(0))
+	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002F2A5C]+A0C]+28", char_pos(1))
+	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002F2A5C]+A0C]+2C", char_pos(2))
 	Dim count
 	count = 0
 	Do
@@ -80,9 +91,9 @@ Function SetCharPos(handle, char_pos)
 End Function
 
 Function SetCharPosPlane(handle, char_pos)
-	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+24", char_pos(0))
-	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+28", char_pos(1))
-	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002C5698]+A0C]+2C", char_pos(2))
+	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002F2A5C]+A0C]+24", char_pos(0))
+	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002F2A5C]+A0C]+28", char_pos(1))
+	dm_ret = dm.WriteFloat(handle, "[[<Cubic.exe>+002F2A5C]+A0C]+2C", char_pos(2))
 	Dim count
 	count = 0
 	Do
@@ -92,14 +103,14 @@ Function SetCharPosPlane(handle, char_pos)
 End Function
 
 Sub GetCameraAngle(handle)
-	azimu = round(dm.ReadFloat(handle, "[<Cubic.exe>+002C5698]+978"))
-	polar = round(dm.ReadFloat(handle, "[<Cubic.exe>+002C5698]+97C"))
+	azimu = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+978"))
+	polar = round(dm.ReadFloat(handle, "[<Cubic.exe>+002F2A5C]+97C"))
 	GetCameraAngle = Array(azimu, polar)
 End Sub
 
 Function SetCameraAngle(handle, camera_angle)
-	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002C5698]+978", camera_angle(0))
-	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002C5698]+97C", camera_angle(1))
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F2A5C]+978", camera_angle(0))
+	dm_ret = dm.WriteFloat(handle, "[<Cubic.exe>+002F2A5C]+97C", camera_angle(1))
 End Function
 
 Function CubicClick(handle, click_x, click_y)
@@ -210,6 +221,9 @@ Call Lib.CC.TP(Target_x, Target_y + 1, land_z-1)
 End Function
 
 
+
+
+
 Function AdrToPos(Address, Bias)
 	Dim arr(1), biased_address
 	arr(0) = Address
@@ -292,5 +306,19 @@ Next
 
 
 
+
+End Function
+
+
+Function GetWindowWH(handle)
+
+//下面这句是得到窗口句柄的客户区大小
+Dim sRect, MyArray, L, T, W, H
+sRect = Plugin.Window.GetClientRect(handle)
+MyArray = Split(sRect, "|")
+//下面这句将字符串转换成数值
+L = Clng(MyArray(0)): T = Clng(MyArray(1))
+W = Clng(MyArray(2)): H = Clng(MyArray(3))
+GetWindowWH = Array(W, H)
 
 End Function

@@ -9,7 +9,7 @@ StopHotkeyMod=0
 RunOnce=1
 EnableWindow=
 MacroID=76a77ca0-6fdc-4a0a-89ce-428189f90580
-Description=采集宝石【领域级】【内存】
+Description=采集宝石【领域级】【内存】【半自动】
 Enable=0
 AutoRun=0
 [Repeat]

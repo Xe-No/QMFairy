@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=935cb68d-5490-4e4f-9065-e45def4d3a3e
 Description=alts quest new 1
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0

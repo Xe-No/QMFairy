@@ -21,6 +21,16 @@ QUI=
 [Relative]
 SetupOCXFile=
 [Comment]
+【功能说明】
+方块鉴别系统，传送系统
+【使用说明】
+启动脚本之后
+-F1 获取鼠标所指方块坐标及方块ID，并保存此坐标
+-F2 获取脚下位置对应的方块坐标及方块ID，并保存此坐标
+-F3 传送到鼠标所指的地点
+-F4 传送到保存点
+-F5 查看鼠标所指玻璃中的物品
+-F6 查看鼠标所指方块的具体数据
 
 [Script]
 //金手指
@@ -51,7 +61,7 @@ Select Case GetLastKey
 	Case 109  //-	
 		pass_num = pass_num - 1
 		Call dm.FoobarPrintText(foobar, "Pass -, current pass :" & pass_num, "000000")
-	Case 112  //F1  获取鼠标所指方块坐标及方块ID，并保存
+	Case 117  //F1  获取鼠标所指方块坐标及方块ID，并保存此坐标
 		Call Lib.CM.GetCursorBlockPos(pass_num)
 		SX = GoldX
 		SY = GoldY
@@ -59,23 +69,24 @@ Select Case GetLastKey
 		info = "方块ID: " & Lib.CC.ReadBlock(SX, SY, SZ) & vbCrLf & "方块坐标: " & GoldX & "|" & GoldY & "|" & GoldZ
 		Call dm.FoobarPrintText(foobar, info, "000000")
 		
-	Case 113  //F2  保存脚下位置
+	Case 113  //F2  获取脚下位置对应的方块坐标及方块ID，并保存此坐标
 		Call Lib.CC.GetCharPos()
 		SX = CharX
 		SY = CharY
 		SZ = CharZ
-		Call dm.FoobarPrintText(foobar, "坐标保存" , "000000")
-	Case 114  //F3 直接传送
+		info = "方块ID: " & Lib.CC.ReadBlock(SX, SY, SZ) & vbCrLf & "方块坐标: " & SX & "|" & SY & "|" & SZ
+		Call dm.FoobarPrintText(foobar, info , "000000")
+	Case 114  //F3 传送到鼠标所指的地点
 		Call Lib.CM.GetCursorBlockPos(pass_num)
 		Call Lib.CC.TP(GoldX, GoldY, GoldZ - 1)
 		Call dm.FoobarPrintText(foobar, "传送到"&GoldX&","& GoldY&","& GoldZ - 1, "000000")
 	Case 115//F4 传送到保存点
 		Call Lib.CC.TP(SX,SY, SZ - 1)
 		Call dm.FoobarPrintText(foobar, "传送到"&SX&","& SY&","& SZ - 1, "000000")
-	Case 116 //F5 查看物品
+	Case 116 //F5 查看鼠标所指玻璃中的物品
 		Call Lib.CM.GetCursorBlockPos(pass_num)
 		Call GetItem(SX,SY,SZ)
-	Case 117 //F6 查看方块数据
+	Case 117 //F6 查看鼠标所指方块的具体数据
 		Call Lib.CM.GetCursorBlockPos(pass_num)
 		info = "方块ID: " & Lib.CC.ReadBlock(GoldX, GoldY, GoldZ) & vbCrLf & "方块坐标: " & GoldX & "|" & GoldY & "|" & GoldZ & vbCrLf & "方块数据：" &Lib.CC.ReadBlockData(GoldX, GoldY, GoldZ)
 		Call dm.FoobarPrintText(foobar, info, "000000")

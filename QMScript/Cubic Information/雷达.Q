@@ -58,7 +58,7 @@ DrawMapSize
 Call PrintCord(653, "FF00FF")	//绿宝石，绿色
 Call PrintCord(652, "FF0000")  	//红宝石，红色
 Call PrintCord(651, "00FFFF")	//钻石，青色
-Call PrintCord(856, "FFFFFF")
+Call PrintCord(830, "FFFFFF")
 Call PrintItemCord("F86F00")
 //
 //For index = 377 To 388

@@ -393,7 +393,7 @@ Next
 
 //掘取目标方块
 Rem Grab	
-Call Lib.CC.TPEx(Target_x, Target_y + 0.1 , Target_z - 2)
+Call Lib.CC.TPEx(Target_x, Target_y + 0.01 , Target_z - 2)
 Delay 100
 CCount = 0
 Call Lib.CC.BiasClick(handle, 0, 0)
@@ -409,6 +409,10 @@ Wend
 //Delay 20
 //Wend
 counter = 0
+
+MinePrecise = 0
+
+
 Do
 	Delay 100
 	counter = counter + 1
@@ -637,7 +641,7 @@ Dim array_count, index, temp
 array_count = UBound(addresses)
 
 
-If Direction = "up" Then 
+If Direction = "up" Then
 For index = 0 To Round(array_count / 2 - 0.1)
 	temp = addresses(index)
 	addresses(index) = addresses(array_count - index)
@@ -645,12 +649,17 @@ For index = 0 To Round(array_count / 2 - 0.1)
 Next
 End If
 
-If Lib.CC.ScanPpl() > 1 Then
-	ReapBlock = 1
-	Exit Function
-End If
+
+
+
 
 For Each I In addresses
+
+	If Lib.CC.ScanPpl() > 1 Then
+		ReapBlock = 1
+		Exit Function
+	End If
+
 	Dim block_ID, block_type, block
 	block_ID = Lib.CC.AdrToPos(I, 0)
 	block_type = Lib.CC.AdrToPos(I, 1) Mod 8

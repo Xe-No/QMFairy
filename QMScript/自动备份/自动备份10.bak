@@ -410,9 +410,9 @@ Wend
 //Wend
 counter = 0
 Do
-	Delay 20
+	Delay 100
 	counter = counter + 1
-Loop Until Lib.CC.CollectItemNear() = 0 Or counter>50
+Loop Until Lib.CC.CollectItemNear() = 0 Or counter>3
 End Function
 
 Function CollectItemNear()
@@ -639,16 +639,17 @@ array_count = UBound(addresses)
 
 If Direction = "up" Then 
 For index = 0 To Round(array_count / 2 - 0.1)
-	
 	temp = addresses(index)
 	addresses(index) = addresses(array_count - index)
 	addresses(array_count - index) = temp
-	
 Next
 End If
 
-Dim I, scan_count
-scan_count = 0
+If Lib.CC.ScanPpl() > 1 Then
+	ReapBlock = 1
+	Exit Function
+End If
+
 For Each I In addresses
 	Dim block_ID, block_type, block
 	block_ID = Lib.CC.AdrToPos(I, 0)
@@ -662,13 +663,8 @@ For Each I In addresses
 
 		Call Lib.CC.MinePrecise(bx, by, bz, block_want)
 		
-		If Lib.CC.ScanPpl() > 1 Then
-			scan_count = scan_count + 1
-		End If
-		If scan_count > 2 Then 
-			ReapBlock = 1
-			Exit Function
-		End If
+
+
 	End If
 		
 
@@ -943,15 +939,17 @@ Call Lib.CC.GetEntitySize()
 
 TracePrint EntitySize
 
+ScanPpl = 0
 For index = EntitySize + 10 To 0 Step -1
 
 Call Lib.CC.GetEntityPos(Index)
 Call Lib.CC.GetEntityID(Index)
 
 //Collect
+
 If -1 < EntityX < SizeX And -1  < EntityY < SizeY And -1  < EntityZ < SizeZ And EntityType = CC_QbeeType Then 
 	ScanPpl = ScanPpl + 1
-	TracePrint "Scanned"
+	TracePrint "Scanned: " & ScanPpl
 End If
 
 Next

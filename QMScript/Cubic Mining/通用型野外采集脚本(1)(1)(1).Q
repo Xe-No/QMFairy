@@ -8,8 +8,8 @@ StopHotkey=123
 StopHotkeyMod=0
 RunOnce=1
 EnableWindow=
-MacroID=73d1a88e-1b35-4d82-86e0-768f9de57048
-Description=E1 通用型野外采集脚本
+MacroID=20c3be2e-0b3e-438a-a59c-0d37daeb8f29
+Description=E7 通用型野外采集脚本
 Enable=0
 AutoRun=0
 [Repeat]

@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=aefba036-07ef-4fe1-98d7-f56f5da0d917
 Description=价格搜集脚本
-Enable=0
+Enable=1
 AutoRun=0
 [Repeat]
 Type=0
@@ -23,7 +23,6 @@ SetupOCXFile=
 [Comment]
 【功能说明】
 用于在商场内收集贩卖机的价格信息。
-
 【使用说明】
 在商场内启动脚本即可。
 
@@ -57,14 +56,15 @@ If Lib.CC.DetectEntity(bx - 0.1, bx + 0.1, by - 0.1, by + 0.1, bz - 1 - 0.1, bz 
 	Exit Sub
 End If
 
-Call Lib.CC.TP(bx,by,bz)
-Delay 1000
+Call Lib.CC.TP(bx+1,by,bz)
 
 
-//TracePrint dm.FindPic(296,0,1025,727, path & "Use_Vend.bmp", "000000", 0.9, 0, intX, intY) = - 1 
+Do
+	Delay 200
+Loop While dm.FindPic(296,0,1025,727, path & "Use_Vend.bmp", "000000", 0.8, 0, intX, intY) = - 1 
 
 
-Call Lib.CC.CubicClick(handle, 640, 300)
+Call Lib.CC.CubicClick(handle, intX, intY)
 
 Do
 Delay 100

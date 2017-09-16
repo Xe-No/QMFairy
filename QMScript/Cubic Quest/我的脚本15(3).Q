@@ -10,7 +10,7 @@ RunOnce=1
 EnableWindow=
 MacroID=7c1a57e5-3a5a-4bfe-9f2c-3c7db25ce89f
 Description=alts quest new 2
-Enable=1
+Enable=0
 AutoRun=0
 [Repeat]
 Type=0
@@ -23,7 +23,7 @@ SetupOCXFile=
 [Comment]
 
 [Script]
-//小号任务状态写入测试
+ d//小号任务状态写入测试
 
 UserVar Kernel_Number = 1 "核心编号"
 UserVar Kernel_Max = 4 "核心总数"
